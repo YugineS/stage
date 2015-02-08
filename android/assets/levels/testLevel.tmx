@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="11" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="testTiles" tilewidth="32" tileheight="32">
+  <image source="testTiles(160x32).png" width="160" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="isWall" value="true"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="isWall" value="false"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="platformType" value="vertical"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="platformType" value="horizontal"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="walls" width="20" height="11">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYKQyphYg1zxGNBqbeaSYOxTMwxYH5JqHzVxqmYfNfHIBuruolf6onR+QMQCOYABU
+  </data>
+ </layer>
+ <layer name="tiles" width="20" height="11">
+  <data encoding="base64" compression="zlib">
+   eJxjYKA+YKISRjaPWHvQ9VDbPGx8WptHTBhhs5sc83CZjcs8XH7DZR6x6olxLza/keI/UsOUGgAAakcA1Q==
+  </data>
+ </layer>
+ <objectgroup name="platforms" width="20" height="11">
+  <object gid="4" x="160" y="160"/>
+ </objectgroup>
+</map>
