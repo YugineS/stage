@@ -20,8 +20,8 @@ public class GameRenderer
         batch = new SpriteBatch();
         cam = new OrthographicCamera();
         cam.setToOrtho(false, Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
-        cam.position.y=gameWorld.getRowsAmt()*gameWorld.getTileHeight()/2;
-        cam.position.x=gameWorld.getCollsAmt()*gameWorld.getTileWidth()/2;
+        cam.position.y = gameWorld.getHeight() * gameWorld.getTileHeight() / 2;
+        cam.position.x = gameWorld.getWidth() * gameWorld.getTileWidth() / 2;
         cam.update();
         batch.setProjectionMatrix(cam.combined);
         init();
@@ -40,7 +40,7 @@ public class GameRenderer
         tmRenderer.render();
 
         batch.begin();
-        batch.draw(gameWorld.getPlayer().getTexture(), gameWorld.getPlayer().getX(), gameWorld.getPlayer().getY());
+        batch.draw(gameWorld.getPlayer().getTexture(), gameWorld.getPlayer().getScreenX(), gameWorld.getPlayer().getScreenY());
         batch.end();
     }
 

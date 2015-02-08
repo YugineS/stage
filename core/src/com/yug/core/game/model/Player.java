@@ -22,8 +22,8 @@ public class Player extends MovableTile
     private final GameWorld gameWorld;
     private Texture texture;
     private PathFinder pathFinder;
-    private LinkedList<NavigationPoint> path;
-    private NavigationPoint nextNavigationPoint;
+    private LinkedList<Tile> path;
+    private Tile nextNavigationPoint;
     private boolean moving;
     private Direction direction;
 
@@ -63,39 +63,39 @@ public class Player extends MovableTile
 
     private void updateDirection()
     {
-        final int nextCol = nextNavigationPoint.getX();
-        final int nextRow = nextNavigationPoint.getY();
-        final int colDelta = nextCol - getCol();
-        final int rowDelta = nextRow - getRow();
-        if (colDelta < 0 && rowDelta == 0)
+        final int nextX = nextNavigationPoint.getX();
+        final int nextY = nextNavigationPoint.getY();
+        final int deltaX = nextX - getX();
+        final int deltaY = nextY - getY();
+        if (deltaX < 0 && deltaY == 0)
         {
             direction = Direction.LEFT;
         }
-        else if(colDelta>0 && rowDelta ==0)
+        else if(deltaX>0 && deltaY ==0)
         {
             direction = Direction.RIGHT;
         }
-        else if(colDelta == 0 && rowDelta <0)
+        else if(deltaX == 0 && deltaY <0)
         {
             direction = Direction.DOWN;
         }
-        else if(colDelta == 0 && rowDelta>0)
+        else if(deltaX == 0 && deltaY>0)
         {
             direction = Direction.UP;
         }
-        else if(colDelta<0 && rowDelta<0)
+        else if(deltaX<0 && deltaY<0)
         {
             direction = Direction.DOWN_LEFT;
         }
-        else if(colDelta<0 && rowDelta>0)
+        else if(deltaX<0 && deltaY>0)
         {
             direction = Direction.UP_LEFT;
         }
-        else if(colDelta>0 && rowDelta<0)
+        else if(deltaX>0 && deltaY<0)
         {
             direction = Direction.DOWN_RIGHT;
         }
-        else if(colDelta>0 && rowDelta>0)
+        else if(deltaX>0 && deltaY>0)
         {
             direction = Direction.UP_RIGHT;
         }
@@ -107,120 +107,119 @@ public class Player extends MovableTile
         {
             return;
         }
-        final int nextCol = nextNavigationPoint.getX();
-        final int nextRow = nextNavigationPoint.getY();
-
-        final float nextPointX = nextCol * gameWorld.getTileWidth();
-        final float nextPointY = nextRow * gameWorld.getTileHeight();
-        setCol(nextCol);
-        setRow(nextRow);
-        float newX = getX();
-        float newY = getY();
+        final int nextX = nextNavigationPoint.getX();
+        final int nextY = nextNavigationPoint.getY();
+        final float nextPointScreenX = nextX * gameWorld.getTileWidth();
+        final float nextPointScreenY = nextY * gameWorld.getTileHeight();
+        setX(nextX);
+        setY(nextY);
+        float newScreenX = getScreenX();
+        float newScreenY = getScreenY();
         if (Direction.LEFT.equals(direction))
         {
             //moving left
-            newX = getX() - getSpeed() * deltaT;
-            if (newX <= nextPointX)
+            newScreenX = getScreenX() - getSpeed() * deltaT;
+            if (newScreenX <= nextPointScreenX)
             {
-                newX = nextPointX;
+                newScreenX = nextPointScreenX;
             }
         }
         else if(Direction.RIGHT.equals(direction))
         {
             //moving right
-            newX = getX() + getSpeed() * deltaT;
-            if (newX >= nextPointX)
+            newScreenX = getScreenX() + getSpeed() * deltaT;
+            if (newScreenX >= nextPointScreenX)
             {
-                newX = nextPointX;
+                newScreenX = nextPointScreenX;
             }
         }
         else if(Direction.DOWN.equals(direction))
         {
             //moving down
-            newY = getY() - getSpeed()*deltaT;
-            if(newY <=nextPointY)
+            newScreenY = getScreenY() - getSpeed()*deltaT;
+            if(newScreenY <=nextPointScreenY)
             {
-                newY = nextPointY;
+                newScreenY = nextPointScreenY;
             }
         }
         else if(Direction.UP.equals(direction))
         {
             //moving up
-            newY = getY() + getSpeed()*deltaT;
-            if(newY >=nextPointY)
+            newScreenY = getScreenY() + getSpeed()*deltaT;
+            if(newScreenY >=nextPointScreenY)
             {
-                newY = nextPointY;
+                newScreenY = nextPointScreenY;
             }
         }
         else if(Direction.DOWN_LEFT.equals(direction))
         {
             //moving down left
-            newX = getX() - getSpeed() * deltaT;
-            newY = getY() - getSpeed()*deltaT;
-            if (newX <= nextPointX)
+            newScreenX = getScreenX() - getSpeed() * deltaT;
+            newScreenY = getScreenY() - getSpeed()*deltaT;
+            if (newScreenX <= nextPointScreenX)
             {
-                newX = nextPointX;
+                newScreenX = nextPointScreenX;
             }
-            if(newY <=nextPointY)
+            if(newScreenY <=nextPointScreenY)
             {
-                newY = nextPointY;
+                newScreenY = nextPointScreenY;
             }
         }
         else if(Direction.UP_LEFT.equals(direction))
         {
             //moving up left
-            newX = getX() - getSpeed() * deltaT;
-            newY = getY() + getSpeed()*deltaT;
-            if (newX <= nextPointX)
+            newScreenX = getScreenX() - getSpeed() * deltaT;
+            newScreenY = getScreenY() + getSpeed()*deltaT;
+            if (newScreenX <= nextPointScreenX)
             {
-                newX = nextPointX;
+                newScreenX = nextPointScreenX;
             }
-            if(newY >=nextPointY)
+            if(newScreenY >=nextPointScreenY)
             {
-                newY = nextPointY;
+                newScreenY = nextPointScreenY;
             }
         }
         else if(Direction.DOWN_RIGHT.equals(direction))
         {
             //moving down right
-            newX = getX() + getSpeed() * deltaT;
-            newY = getY() - getSpeed()*deltaT;
-            if (newX >= nextPointX)
+            newScreenX = getScreenX() + getSpeed() * deltaT;
+            newScreenY = getScreenY() - getSpeed()*deltaT;
+            if (newScreenX >= nextPointScreenX)
             {
-                newX = nextPointX;
+                newScreenX = nextPointScreenX;
             }
-            if(newY <=nextPointY)
+            if(newScreenY <=nextPointScreenY)
             {
-                newY = nextPointY;
+                newScreenY = nextPointScreenY;
             }
         }
         else if(Direction.UP_RIGHT.equals(direction))
         {
             //moving up right
-            newX = getX() + getSpeed() * deltaT;
-            newY = getY() + getSpeed()*deltaT;
-            if (newX >= nextPointX)
+            newScreenX = getScreenX() + getSpeed() * deltaT;
+            newScreenY = getScreenY() + getSpeed()*deltaT;
+            if (newScreenX >= nextPointScreenX)
             {
-                newX = nextPointX;
+                newScreenX = nextPointScreenX;
             }
-            if(newY >=nextPointY)
+            if(newScreenY >=nextPointScreenY)
             {
-                newY = nextPointY;
+                newScreenY = nextPointScreenY;
             }
         }
-        if (newX == nextPointX && newY == nextPointY)
+        if (newScreenX == nextPointScreenX && newScreenY == nextPointScreenY)
         {
             nextNavigationPoint = null;
         }
-        setX(newX);
-        setY(newY);
+        setScreenX(newScreenX);
+        setScreenY(newScreenY);
     }
 
-    public void goTo(final int destCol, final int destRow)
+    public void goTo(final int destX, final int destY)
     {
-        if(getCol()!=destCol || getRow()!=destRow)
+        if(getX()!=destX || getY()!=destY)
         {
-            path = pathFinder.calculatePath(getCol(), getRow(), destCol, destRow, gameWorld.getNavigationMap());
+            path = pathFinder.calculatePath(getX(), getY(), destX, destY, gameWorld.getNavigationMap());
 
             if (moving && path != null)
             {

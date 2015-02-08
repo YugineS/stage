@@ -22,19 +22,18 @@ public class GameController implements GameInputHandler
      */
     public void update(float deltaT)
     {
-        //final DirectionKey dirKey = inputHandler.getPressedKey();
         final Player player = gameWorld.getPlayer();
         player.update(deltaT);
     }
 
     @Override
-    public void onTap(final float x, final float y)
+    public void onTap(final float screenX, final float screenY)
     {
-        int col = (int)(x / gameWorld.getTileWidth());
-        int row = (int)(y / gameWorld.getTileWidth());
-        if (gameWorld.getRowsAmt()>row && gameWorld.getCollsAmt()>col)
+        final int x = (int) (screenX / gameWorld.getTileWidth());
+        final int y = (int) (screenY / gameWorld.getTileWidth());
+        if (gameWorld.getHeight() > y && gameWorld.getWidth() > x)
         {
-            gameWorld.getPlayer().goTo(col, row);
+            gameWorld.getPlayer().goTo(x, y);
         }
     }
 }

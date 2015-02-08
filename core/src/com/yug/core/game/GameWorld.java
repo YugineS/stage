@@ -1,20 +1,12 @@
 package com.yug.core.game;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.yug.core.Constants;
 import com.yug.core.game.model.Player;
+import com.yug.core.game.model.Tile;
 import com.yug.pf.NavigationMap;
-import com.yug.pf.NavigationPoint;
-
-import java.util.Iterator;
 
 /**
  * The root class of game model.
@@ -24,6 +16,8 @@ public class GameWorld
 {
     private final static String TM_WITH = "width";
     private final static String TM_HEIGHT = "height";
+    private final static String TM_TILE_WIDTH = "tilewidth";
+    private final static String TM_TILE_HEIGHT = "tileheight";
     private final static String TM_WALLS_LAYER_NAME = "walls";
     private final static String TM_TILES_LAYER_NAME = "tiles";
 
@@ -31,11 +25,11 @@ public class GameWorld
     private TiledMap tiledMap;
     private TiledMapTileLayer wallsLayer;
     private TiledMapTileLayer tilesLayer;
-    private int collsAmt;
-    private int rowsAmt;
+    private int width;
+    private int height;
     private float tileWidth;
     private float tileHeight;
-    private NavigationMap<NavigationPoint> navigationMap;
+    private NavigationMap<com.yug.core.game.model.Tile> navigationMap;
 
     private Player player;
 
@@ -49,32 +43,37 @@ public class GameWorld
     public void loadLevel(final LevelName levelName)
     {
         tiledMap = tmLoader.load(levelName.getTmxFilePath());
-        collsAmt = (Integer) tiledMap.getProperties().get(TM_WITH);
-        rowsAmt = (Integer) tiledMap.getProperties().get(TM_HEIGHT);
+        width = (Integer) tiledMap.getProperties().get(TM_WITH);
+        height = (Integer) tiledMap.getProperties().get(TM_HEIGHT);
+        tileHeight = (Integer) tiledMap.getProperties().get(TM_TILE_HEIGHT);
+        tileWidth = (Integer) tiledMap.getProperties().get(TM_TILE_WIDTH);
+
         wallsLayer = (TiledMapTileLayer) tiledMap.getLayers().get(TM_WALLS_LAYER_NAME);
         tilesLayer = (TiledMapTileLayer) tiledMap.getLayers().get(TM_TILES_LAYER_NAME);
-        tileHeight = wallsLayer.getTileHeight();
-        tileWidth = wallsLayer.getTileWidth();
 
-        final NavigationPoint[][] navPoints = new NavigationPoint[collsAmt][rowsAmt];
-        navigationMap = new NavigationMap<NavigationPoint>(navPoints);
+        final Tile[][] navPoints = new Tile[width][height];
+        navigationMap = new NavigationMap<com.yug.core.game.model.Tile>(navPoints);
         loadNavigationMap();
-        player.setCol(1);
-        player.setRow(1);
-        player.setX(player.getCol() * tileWidth);
-        player.setY(player.getRow() * tileHeight);
+        player.setX(1);
+        player.setY(1);
+        player.setScreenX(player.getX() * tileWidth);
+        player.setScreenY(player.getY() * tileHeight);
+        player.setWidth(tileWidth);
+        player.setHeight(tileHeight);
     }
 
     public void loadNavigationMap()
     {
-        for (int x = 0; x<collsAmt; x++)
+        for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y<rowsAmt; y++)
+            for (int y = 0; y < height; y++)
             {
-                NavigationPoint point = navigationMap.getPoint(x, y);
+                Tile point = navigationMap.getPoint(x, y);
                 if (point == null)
                 {
-                    point = new NavigationPoint(x, y);
+                    point = new Tile(x, y);
+                    point.setWidth(tileWidth);
+                    point.setHeight(tileHeight);
                     navigationMap.setPoint(point, x, y);
                 }
                 point.setWalkable(tilesLayer.getCell(x, y) != null);
@@ -128,17 +127,17 @@ public class GameWorld
     /**
      * Returns the game world with. Amount of tiles.
      */
-    public int getCollsAmt()
+    public int getWidth()
     {
-        return collsAmt;
+        return width;
     }
 
     /**
      * Returns the game world height. Amount of tiles.
      */
-    public int getRowsAmt()
+    public int getHeight()
     {
-        return rowsAmt;
+        return height;
     }
 
     /**
@@ -162,7 +161,7 @@ public class GameWorld
         return player;
     }
 
-    public NavigationMap<NavigationPoint> getNavigationMap()
+    public NavigationMap<Tile> getNavigationMap()
     {
         return navigationMap;
     }
