@@ -3,7 +3,7 @@ package com.yug.core.game.model;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.yug.core.game.GameWorld;
-import com.yug.pf.NavigationPoint;
+import com.yug.pf.NavigationMap;
 import com.yug.pf.PathFinder;
 
 import java.util.LinkedList;
@@ -11,7 +11,7 @@ import java.util.LinkedList;
 /**
  * Created by yugine on 22.1.15.
  */
-public class Player extends MovableTile
+public class Player extends MovableTile implements NavigationMapObserver
 {
     private enum Direction
     {
@@ -57,6 +57,23 @@ public class Player extends MovableTile
             else
             {
                 updatePosition(deltaT);
+            }
+        }
+    }
+
+    @Override
+    public void onMapUpdate(final NavigationMapWrapper navigationMap)
+    {
+        if (isMoving() && path != null && path.size()>0)
+        {
+            for (final Tile tile : path)
+            {
+                Tile navPoint = navigationMap.getPoint(tile.getX(), tile.getY());
+                if (navPoint == null || !navPoint.isWalkable())
+                {
+                    final Tile endPoint = path.getLast();
+                    goTo(endPoint.getX(), endPoint.getY());
+                }
             }
         }
     }
@@ -227,7 +244,7 @@ public class Player extends MovableTile
                 //nextNavigationPoint = path.pop();
                 //updateDirection();
             }
-            else if (!moving && path != null)
+            else if (!moving && path != null && path.size() > 0)
             {
                 moving = true;
             }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.yug.core.game.model.NavigationMapWrapper;
 import com.yug.core.game.model.Player;
 import com.yug.core.game.model.Tile;
 import com.yug.pf.NavigationMap;
@@ -29,7 +30,7 @@ public class GameWorld
     private int height;
     private float tileWidth;
     private float tileHeight;
-    private NavigationMap<com.yug.core.game.model.Tile> navigationMap;
+    private NavigationMapWrapper navigationMap;
 
     private Player player;
 
@@ -52,7 +53,7 @@ public class GameWorld
         tilesLayer = (TiledMapTileLayer) tiledMap.getLayers().get(TM_TILES_LAYER_NAME);
 
         final Tile[][] navPoints = new Tile[width][height];
-        navigationMap = new NavigationMap<com.yug.core.game.model.Tile>(navPoints);
+        navigationMap = new NavigationMapWrapper(navPoints);
         loadNavigationMap();
         player.setX(1);
         player.setY(1);
