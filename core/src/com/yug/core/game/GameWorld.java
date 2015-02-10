@@ -89,22 +89,6 @@ public class GameWorld
         return tiledMap;
     }
 
-    /**
-     * Returns the tile that player can walk through.
-     */
-    public TiledMapTile getFloorTile(final int col, final int row)
-    {
-        return getTile(tilesLayer, col, row);
-    }
-
-    /**
-     * Returns the tile that palyer can not walk through.
-     */
-    public TiledMapTile getWallTile(final int col, final int row)
-    {
-        return getTile(wallsLayer, col, row);
-    }
-
     private TiledMapTile getTile(final TiledMapTileLayer layer, final int col, final int row)
     {
         TiledMapTile result = null;
