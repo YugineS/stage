@@ -5,7 +5,8 @@ import com.yug.pf.NavigationMap;
 
 public class Platform extends MovableTile
 {
-    private PlatformState state;
+    private State state = State.STAYING;
+    private Type type = Type.PLATFORM;
     private final GameWorld gameWorld;
 
     public Platform(final GameWorld gameWorld)
@@ -16,64 +17,64 @@ public class Platform extends MovableTile
 
     public void moveLeft()
     {
-        if (getLeftX() > -1)
+        if (getLeftX() > -1 && (Type.PLATFORM.equals(type) || Type.HORIZONTAL_PLATFORM.equals(type) || Type.LEFT_PLATFORM.equals(type)))
         {
-            if (PlatformState.STAYING.equals(state) || PlatformState.MOVING_RIGHT.equals(state))
+            if (State.STAYING.equals(state) || State.MOVING_RIGHT.equals(state))
             {
-                if (PlatformState.STAYING.equals(state))
+                if (State.STAYING.equals(state))
                 {
                     //updating navigation map. The platform moved from original place.
                     gameWorld.getNavigationMap().setPoint(null, getX(), getY());
                 }
-                state = PlatformState.MOVING_LEFT;
+                state = State.MOVING_LEFT;
             }
         }
     }
 
     public void moveRight()
     {
-        if (getRightX() > -1)
+        if (getRightX() > -1 && (Type.PLATFORM.equals(type) || Type.HORIZONTAL_PLATFORM.equals(type) || Type.RIGHT_PLATFORM.equals(type)))
         {
-            if (PlatformState.STAYING.equals(state) || PlatformState.MOVING_LEFT.equals(state))
+            if (State.STAYING.equals(state) || State.MOVING_LEFT.equals(state))
             {
-                if (PlatformState.STAYING.equals(state))
+                if (State.STAYING.equals(state))
                 {
                     //updating navigation map. The platform moved from original place.
                     gameWorld.getNavigationMap().setPoint(null, getX(), getY());
                 }
-                state = PlatformState.MOVING_RIGHT;
+                state = State.MOVING_RIGHT;
             }
         }
     }
 
     public void moveUp()
     {
-        if (getTopY() > -1)
+        if (getTopY() > -1 && (Type.PLATFORM.equals(type) || Type.VERTICAL_PLATFORM.equals(type) || Type.UP_PLATFORM.equals(type)))
         {
-            if (PlatformState.STAYING.equals(state) || PlatformState.MOVING_DOWN.equals(state))
+            if (State.STAYING.equals(state) || State.MOVING_DOWN.equals(state))
             {
-                if (PlatformState.STAYING.equals(state))
+                if (State.STAYING.equals(state))
                 {
                     //updating navigation map. The platform moved from original place.
                     gameWorld.getNavigationMap().setPoint(null, getX(), getY());
                 }
-                state = PlatformState.MOVING_UP;
+                state = State.MOVING_UP;
             }
         }
     }
 
     public void moveDown()
     {
-        if (getTopY() > -1)
+        if (getTopY() > -1 && (Type.PLATFORM.equals(type) || Type.VERTICAL_PLATFORM.equals(type) || Type.DOWN_PLATFORM.equals(type)))
         {
-            if (PlatformState.STAYING.equals(state) || PlatformState.MOVING_UP.equals(state))
+            if (State.STAYING.equals(state) || State.MOVING_UP.equals(state))
             {
-                if (PlatformState.STAYING.equals(state))
+                if (State.STAYING.equals(state))
                 {
                     //updating navigation map. The platform moved from original place.
                     gameWorld.getNavigationMap().setPoint(null, getX(), getY());
                 }
-                state = PlatformState.MOVING_DOWN;
+                state = State.MOVING_DOWN;
             }
         }
     }
@@ -87,7 +88,7 @@ public class Platform extends MovableTile
         final int topY = getTopY();
         final int bottomY = getBottomY();
 
-        if (PlatformState.MOVING_LEFT.equals(state) && leftX > -1)
+        if (State.MOVING_LEFT.equals(state) && leftX > -1)
         {
             float newScreenX = getScreenX() - getSpeed() * deltaT;
             final float leftScreenX = leftX * gameWorld.getTileWidth();
@@ -102,7 +103,7 @@ public class Platform extends MovableTile
             }
             setScreenX(newScreenX);
         }
-        else if (PlatformState.MOVING_RIGHT.equals(state) && rightX > -1)
+        else if (State.MOVING_RIGHT.equals(state) && rightX > -1)
         {
             float newScreenX = getScreenX() + getSpeed() * deltaT;
             final float rightScreenX = rightX * gameWorld.getTileWidth();
@@ -117,7 +118,7 @@ public class Platform extends MovableTile
             }
             setScreenX(newScreenX);
         }
-        else if (PlatformState.MOVING_UP.equals(state) && topY > -1)
+        else if (State.MOVING_UP.equals(state) && topY > -1)
         {
             float newScreenY = getScreenY() + getSpeed() * deltaT;
             final float topScreenY = topY * gameWorld.getTileHeight();
@@ -132,7 +133,7 @@ public class Platform extends MovableTile
             }
             setScreenY(newScreenY);
         }
-        else if (PlatformState.MOVING_DOWN.equals(state) && bottomY > -1)
+        else if (State.MOVING_DOWN.equals(state) && bottomY > -1)
         {
             float newScreenY = getScreenY() - getSpeed() * deltaT;
             final float bottomScreenY = bottomY * gameWorld.getTileHeight();
@@ -151,7 +152,7 @@ public class Platform extends MovableTile
 
     private void arrive()
     {
-        state = PlatformState.STAYING;
+        state = State.STAYING;
         gameWorld.getNavigationMap().setPoint(this, getX(), getY());
     }
 
@@ -179,8 +180,28 @@ public class Platform extends MovableTile
         return bottomY > -1 && gameWorld.getNavigationMap().getBottomOf(getX(), getY()) == null ? bottomY : -1;
     }
 
-    public enum PlatformState
+    public Type getType()
+    {
+        return type;
+    }
+
+    public void setType(final Type type)
+    {
+        this.type = type;
+    }
+
+    public GameWorld getGameWorld()
+    {
+        return gameWorld;
+    }
+
+    public enum State
     {
         MOVING_LEFT, MOVING_RIGHT, MOVING_UP, MOVING_DOWN, STAYING
+    }
+
+    public enum Type
+    {
+        PLATFORM, VERTICAL_PLATFORM, HORIZONTAL_PLATFORM, UP_PLATFORM, DOWN_PLATFORM, LEFT_PLATFORM, RIGHT_PLATFORM
     }
 }
