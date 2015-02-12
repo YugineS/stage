@@ -14,7 +14,7 @@
   </tile>
   <tile id="3">
    <properties>
-    <property name="platformType" value="vertical"/>
+    <property name="" value=""/>
    </properties>
   </tile>
   <tile id="4">
@@ -24,16 +24,32 @@
   </tile>
  </tileset>
  <layer name="walls" width="20" height="11">
+  <properties>
+   <property name="walkable" value="false"/>
+  </properties>
   <data encoding="base64" compression="zlib">
    eJxjZGBgYKQyphYg1zxGNBqbeaSYOxTMwxYH5JqHzVxqmYfNfHIBuruolf6onR+QMQCOYABU
   </data>
  </layer>
  <layer name="tiles" width="20" height="11">
+  <properties>
+   <property name="walkable" value="true"/>
+  </properties>
   <data encoding="base64" compression="zlib">
    eJxjYKA+YKISRjaPWHvQ9VDbPGx8WptHTBhhs5sc83CZjcs8XH7DZR6x6olxLza/keI/UsOUGgAAakcA1Q==
   </data>
  </layer>
  <objectgroup name="platforms" width="20" height="11">
-  <object gid="4" x="160" y="160"/>
+  <properties>
+   <property name="walkable" value="true"/>
+  </properties>
+  <object gid="4" x="160" y="160">
+   <properties>
+    <property name="platformType" value="platform"/>
+    <property name="type" value="platform"/>
+    <property name="x" value="5"/>
+    <property name="y" value="6"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
