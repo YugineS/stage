@@ -14,6 +14,9 @@ public class GameGestureListener implements GestureDetector.GestureListener
     private final GameInputHandler gameInputHandler;
     private final OrthographicCamera cam;
     private final Vector3 tapCoordinates = new Vector3();
+    private final Vector3 flingStartCoordinates = new Vector3();
+    private float touchDownX;
+    private float touchDownY;
 
     public GameGestureListener(final GameInputHandler gameInputHandler, final OrthographicCamera cam)
     {
@@ -22,9 +25,11 @@ public class GameGestureListener implements GestureDetector.GestureListener
     }
 
     @Override
-    public boolean touchDown(float v, float v1, int i, int i1)
+    public boolean touchDown(float x, float y, int i, int i1)
     {
-        return false;
+        touchDownX = x;
+        touchDownY = y;
+        return true;
     }
 
     @Override
@@ -45,9 +50,14 @@ public class GameGestureListener implements GestureDetector.GestureListener
     }
 
     @Override
-    public boolean fling(float v, float v1, int i)
+    public boolean fling(float velocityX, float velocityY, int i)
     {
-        return false;
+        flingStartCoordinates.x=touchDownX;
+        flingStartCoordinates.y=touchDownY;
+        flingStartCoordinates.z=0;
+        final Vector3 startCoord = cam.unproject(flingStartCoordinates);
+        gameInputHandler.onFling(startCoord.x, startCoord.y, velocityX, velocityY);
+        return true;
     }
 
     @Override

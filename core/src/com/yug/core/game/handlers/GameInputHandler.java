@@ -5,5 +5,6 @@ package com.yug.core.game.handlers;
  */
 public interface GameInputHandler
 {
-    public void onTap(final float x, final float y);
+    void onTap(final float x, final float y);
+    void onFling(final float startX, final float startY, final float velocityX, final float velocityY);
 }

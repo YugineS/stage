@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.yug.core.Constants;
+import com.yug.core.game.model.Platform;
 
 public class GameRenderer
 {
@@ -40,6 +41,10 @@ public class GameRenderer
         tmRenderer.render();
 
         batch.begin();
+        for (final Platform platform : gameWorld.getPlatforms())
+        {
+            batch.draw(platform.getTexture(), platform.getScreenX(), platform.getScreenY());
+        }
         batch.draw(gameWorld.getPlayer().getTexture(), gameWorld.getPlayer().getScreenX(), gameWorld.getPlayer().getScreenY());
         batch.end();
     }
