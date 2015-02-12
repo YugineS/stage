@@ -18,6 +18,7 @@ public class Tile extends NavigationPoint
     private float screenY;
     private float width;
     private float height;
+    private NavigationMapWrapper navigationMap;
 
     public float getWidth()
     {
@@ -57,5 +58,15 @@ public class Tile extends NavigationPoint
     public void setScreenY(final float screenY)
     {
         this.screenY = screenY;
+    }
+
+    public NavigationMapWrapper getNavigationMap()
+    {
+        return navigationMap;
+    }
+
+    public void setNavigationMap(final NavigationMapWrapper navigationMap)
+    {
+        this.navigationMap = navigationMap;
     }
 }

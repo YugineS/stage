@@ -1,7 +1,6 @@
 package com.yug.core.game.model;
 
 import com.yug.pf.NavigationMap;
-import com.yug.pf.NavigationPoint;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,9 +12,9 @@ public class NavigationMapWrapper extends NavigationMap<Tile> implements Navigat
 {
     private final List<NavigationMapObserver> observers;
 
-    public NavigationMapWrapper(final Tile[][] map)
+    public NavigationMapWrapper(final int mapWidth, final int mapHeight)
     {
-        super(map);
+        super(new Tile[mapWidth][mapHeight]);
         observers = new LinkedList<NavigationMapObserver>();
     }
 
@@ -23,6 +22,10 @@ public class NavigationMapWrapper extends NavigationMap<Tile> implements Navigat
     public void setPoint(final Tile point, final int x, final int y)
     {
         super.setPoint(point, x, y);
+        if (point != null)
+        {
+            point.setNavigationMap(this);
+        }
         notifyObservers();
     }
 
