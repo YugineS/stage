@@ -1,8 +1,12 @@
-package com.yug.core.game.model;
+package com.yug.core.game.model.player;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.yug.core.game.GameWorld;
+import com.yug.core.game.model.MovableTile;
+import com.yug.core.game.model.NavigationMapObserver;
+import com.yug.core.game.model.NavigationMapWrapper;
+import com.yug.core.game.model.Tile;
 import com.yug.pf.PathFinder;
 
 import java.util.LinkedList;
