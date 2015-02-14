@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Platform extends MovableTile
 {
-    private State state = State.STAYING;
+    private State state = State.STANDING;
     private Type type = Type.PLATFORM;
     private Texture testTexture;
 
@@ -18,9 +18,9 @@ public class Platform extends MovableTile
     {
         if (getLeftX() > -1 && (Type.PLATFORM.equals(type) || Type.HORIZONTAL_PLATFORM.equals(type) || Type.LEFT_PLATFORM.equals(type)))
         {
-            if (State.STAYING.equals(state) || State.MOVING_RIGHT.equals(state))
+            if (State.STANDING.equals(state) || State.MOVING_RIGHT.equals(state))
             {
-                if (State.STAYING.equals(state))
+                if (State.STANDING.equals(state))
                 {
                     //updating navigation map. The platform moved from original place.
                     getNavigationMap().setPoint(null, getX(), getY());
@@ -34,9 +34,9 @@ public class Platform extends MovableTile
     {
         if (getRightX() > -1 && (Type.PLATFORM.equals(type) || Type.HORIZONTAL_PLATFORM.equals(type) || Type.RIGHT_PLATFORM.equals(type)))
         {
-            if (State.STAYING.equals(state) || State.MOVING_LEFT.equals(state))
+            if (State.STANDING.equals(state) || State.MOVING_LEFT.equals(state))
             {
-                if (State.STAYING.equals(state))
+                if (State.STANDING.equals(state))
                 {
                     //updating navigation map. The platform moved from original place.
                     getNavigationMap().setPoint(null, getX(), getY());
@@ -50,9 +50,9 @@ public class Platform extends MovableTile
     {
         if (getTopY() > -1 && (Type.PLATFORM.equals(type) || Type.VERTICAL_PLATFORM.equals(type) || Type.UP_PLATFORM.equals(type)))
         {
-            if (State.STAYING.equals(state) || State.MOVING_DOWN.equals(state))
+            if (State.STANDING.equals(state) || State.MOVING_DOWN.equals(state))
             {
-                if (State.STAYING.equals(state))
+                if (State.STANDING.equals(state))
                 {
                     //updating navigation map. The platform moved from original place.
                     getNavigationMap().setPoint(null, getX(), getY());
@@ -66,9 +66,9 @@ public class Platform extends MovableTile
     {
         if (getBottomY() > -1 && (Type.PLATFORM.equals(type) || Type.VERTICAL_PLATFORM.equals(type) || Type.DOWN_PLATFORM.equals(type)))
         {
-            if (State.STAYING.equals(state) || State.MOVING_UP.equals(state))
+            if (State.STANDING.equals(state) || State.MOVING_UP.equals(state))
             {
-                if (State.STAYING.equals(state))
+                if (State.STANDING.equals(state))
                 {
                     //updating navigation map. The platform moved from original place.
                     getNavigationMap().setPoint(null, getX(), getY());
@@ -151,7 +151,7 @@ public class Platform extends MovableTile
 
     private void arrive()
     {
-        state = State.STAYING;
+        state = State.STANDING;
         getNavigationMap().setPoint(this, getX(), getY());
     }
 
@@ -193,7 +193,7 @@ public class Platform extends MovableTile
 
     public enum State
     {
-        MOVING_LEFT, MOVING_RIGHT, MOVING_UP, MOVING_DOWN, STAYING
+        MOVING_LEFT, MOVING_RIGHT, MOVING_UP, MOVING_DOWN, STANDING
     }
 
     public enum Type
