@@ -16,11 +16,6 @@ import java.util.LinkedList;
  */
 public class Player extends MovableTile implements NavigationMapObserver
 {
-    private enum Direction
-    {
-        LEFT, RIGHT, UP, DOWN, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT
-    }
-
     private final float DEFAULT_SPEED = 96;
     private final GameWorld gameWorld;
     private Texture texture;
@@ -67,7 +62,7 @@ public class Player extends MovableTile implements NavigationMapObserver
     @Override
     public void onMapUpdate(final NavigationMapWrapper navigationMap)
     {
-        if (isMoving() && path != null && path.size()>0)
+        if (isMoving() && path != null && path.size() > 0)
         {
             for (final Tile tile : path)
             {
@@ -91,31 +86,31 @@ public class Player extends MovableTile implements NavigationMapObserver
         {
             direction = Direction.LEFT;
         }
-        else if(deltaX>0 && deltaY ==0)
+        else if (deltaX > 0 && deltaY == 0)
         {
             direction = Direction.RIGHT;
         }
-        else if(deltaX == 0 && deltaY <0)
+        else if (deltaX == 0 && deltaY < 0)
         {
             direction = Direction.DOWN;
         }
-        else if(deltaX == 0 && deltaY>0)
+        else if (deltaX == 0 && deltaY > 0)
         {
             direction = Direction.UP;
         }
-        else if(deltaX<0 && deltaY<0)
+        else if (deltaX < 0 && deltaY < 0)
         {
             direction = Direction.DOWN_LEFT;
         }
-        else if(deltaX<0 && deltaY>0)
+        else if (deltaX < 0 && deltaY > 0)
         {
             direction = Direction.UP_LEFT;
         }
-        else if(deltaX>0 && deltaY<0)
+        else if (deltaX > 0 && deltaY < 0)
         {
             direction = Direction.DOWN_RIGHT;
         }
-        else if(deltaX>0 && deltaY>0)
+        else if (deltaX > 0 && deltaY > 0)
         {
             direction = Direction.UP_RIGHT;
         }
@@ -123,121 +118,16 @@ public class Player extends MovableTile implements NavigationMapObserver
 
     private void updatePosition(float deltaT)
     {
-        if (nextNavigationPoint == null)
+        if (nextNavigationPoint != null)
         {
-            return;
+            direction.getHandler().update(deltaT, this);
         }
-        final int nextX = nextNavigationPoint.getX();
-        final int nextY = nextNavigationPoint.getY();
-        final float nextPointScreenX = nextX * gameWorld.getTileWidth();
-        final float nextPointScreenY = nextY * gameWorld.getTileHeight();
-        setX(nextX);
-        setY(nextY);
-        float newScreenX = getScreenX();
-        float newScreenY = getScreenY();
-        if (Direction.LEFT.equals(direction))
-        {
-            //moving left
-            newScreenX = getScreenX() - getSpeed() * deltaT;
-            if (newScreenX <= nextPointScreenX)
-            {
-                newScreenX = nextPointScreenX;
-            }
-        }
-        else if(Direction.RIGHT.equals(direction))
-        {
-            //moving right
-            newScreenX = getScreenX() + getSpeed() * deltaT;
-            if (newScreenX >= nextPointScreenX)
-            {
-                newScreenX = nextPointScreenX;
-            }
-        }
-        else if(Direction.DOWN.equals(direction))
-        {
-            //moving down
-            newScreenY = getScreenY() - getSpeed()*deltaT;
-            if(newScreenY <=nextPointScreenY)
-            {
-                newScreenY = nextPointScreenY;
-            }
-        }
-        else if(Direction.UP.equals(direction))
-        {
-            //moving up
-            newScreenY = getScreenY() + getSpeed()*deltaT;
-            if(newScreenY >=nextPointScreenY)
-            {
-                newScreenY = nextPointScreenY;
-            }
-        }
-        else if(Direction.DOWN_LEFT.equals(direction))
-        {
-            //moving down left
-            newScreenX = getScreenX() - getSpeed() * deltaT;
-            newScreenY = getScreenY() - getSpeed()*deltaT;
-            if (newScreenX <= nextPointScreenX)
-            {
-                newScreenX = nextPointScreenX;
-            }
-            if(newScreenY <=nextPointScreenY)
-            {
-                newScreenY = nextPointScreenY;
-            }
-        }
-        else if(Direction.UP_LEFT.equals(direction))
-        {
-            //moving up left
-            newScreenX = getScreenX() - getSpeed() * deltaT;
-            newScreenY = getScreenY() + getSpeed()*deltaT;
-            if (newScreenX <= nextPointScreenX)
-            {
-                newScreenX = nextPointScreenX;
-            }
-            if(newScreenY >=nextPointScreenY)
-            {
-                newScreenY = nextPointScreenY;
-            }
-        }
-        else if(Direction.DOWN_RIGHT.equals(direction))
-        {
-            //moving down right
-            newScreenX = getScreenX() + getSpeed() * deltaT;
-            newScreenY = getScreenY() - getSpeed()*deltaT;
-            if (newScreenX >= nextPointScreenX)
-            {
-                newScreenX = nextPointScreenX;
-            }
-            if(newScreenY <=nextPointScreenY)
-            {
-                newScreenY = nextPointScreenY;
-            }
-        }
-        else if(Direction.UP_RIGHT.equals(direction))
-        {
-            //moving up right
-            newScreenX = getScreenX() + getSpeed() * deltaT;
-            newScreenY = getScreenY() + getSpeed()*deltaT;
-            if (newScreenX >= nextPointScreenX)
-            {
-                newScreenX = nextPointScreenX;
-            }
-            if(newScreenY >=nextPointScreenY)
-            {
-                newScreenY = nextPointScreenY;
-            }
-        }
-        if (newScreenX == nextPointScreenX && newScreenY == nextPointScreenY)
-        {
-            nextNavigationPoint = null;
-        }
-        setScreenX(newScreenX);
-        setScreenY(newScreenY);
+
     }
 
     public void goTo(final int destX, final int destY)
     {
-        if(getX()!=destX || getY()!=destY)
+        if (getX() != destX || getY() != destY)
         {
             path = pathFinder.calculatePath(getX(), getY(), destX, destY, gameWorld.getNavigationMap());
 
@@ -262,6 +152,16 @@ public class Player extends MovableTile implements NavigationMapObserver
     public void setMoving(final boolean moving)
     {
         this.moving = moving;
+    }
+
+    public Tile getNextNavigationPoint()
+    {
+        return nextNavigationPoint;
+    }
+
+    public void setNextNavigationPoint(final Tile nextNavigationPoint)
+    {
+        this.nextNavigationPoint = nextNavigationPoint;
     }
 
     public Texture getTexture()
@@ -291,6 +191,218 @@ public class Player extends MovableTile implements NavigationMapObserver
         pixmap.setColor(0, 1, 1, 1);
         pixmap.drawRectangle(0, 0, width, height);
         return pixmap;
+    }
+
+    private enum Direction
+    {
+        LEFT(new LeftDirectionHandler()),
+        RIGHT(new RightDirectionHandler()),
+        UP(new UpDirectionHandler()),
+        DOWN(new DownDirectionHandler()),
+        UP_LEFT(new UpLeftDirectionHandler()),
+        UP_RIGHT(new UpRightDirectionHandler()),
+        DOWN_LEFT(new DownLeftDirectionHandler()),
+        DOWN_RIGHT(new DownRightDirectionHandler());
+        private DirectionHandler handler;
+
+        private Direction(final DirectionHandler handler)
+        {
+            this.handler = handler;
+        }
+
+        public DirectionHandler getHandler()
+        {
+            return handler;
+        }
+    }
+
+    private static abstract class DirectionHandler
+    {
+        public void update(final float deltaT, final Player player)
+        {
+            final Tile nextNavigationPoint = player.getNextNavigationPoint();
+            final int nextX = nextNavigationPoint.getX();
+            final int nextY = nextNavigationPoint.getY();
+            final float nextPointScreenX = nextX * player.getWidth();
+            final float nextPointScreenY = nextY * player.getHeight();
+            final float velocity = player.getSpeed() * deltaT;
+            final float newScreenX = getNewScreenX(player.getScreenX(), nextPointScreenX, velocity);
+            final float newScreenY = getNewScreenY(player.getScreenY(), nextPointScreenY, velocity);
+            player.setScreenX(newScreenX);
+            player.setScreenY(newScreenY);
+            player.setX(nextX);
+            player.setY(nextY);
+            //call onChangePosition
+            if (newScreenX == nextPointScreenX && newScreenY == nextPointScreenY)
+            {
+                //call onArrivedToPoint
+                player.setNextNavigationPoint(null);
+            }
+        }
+
+        protected abstract float getNewScreenX(final float playerScreenX, final float nextPointScreenX, final float velocity);
+
+        protected abstract float getNewScreenY(final float playerScreenY, final float nextPointScreenY, final float velocity);
+    }
+
+    private static class LeftDirectionHandler extends DirectionHandler
+    {
+        public static float calcNewScreenX(final float playerScreenX, final float nextPointScreenX, final float velocity)
+        {
+            float newScreenX = playerScreenX - velocity;
+            if (newScreenX <= nextPointScreenX)
+            {
+                newScreenX = nextPointScreenX;
+            }
+            return newScreenX;
+        }
+
+        @Override
+        protected float getNewScreenX(final float playerScreenX, final float nextPointScreenX, final float velocity)
+        {
+            return calcNewScreenX(playerScreenX, nextPointScreenX, velocity);
+        }
+
+        @Override
+        protected float getNewScreenY(final float playerScreenY, final float nextPointScreenY, final float velocity)
+        {
+            return playerScreenY;
+        }
+    }
+
+    private static class RightDirectionHandler extends DirectionHandler
+    {
+        public static float calcNewScreenX(final float playerScreenX, final float nextPointScreenX, final float velocity)
+        {
+            float newScreenX = playerScreenX + velocity;
+            if (newScreenX >= nextPointScreenX)
+            {
+                newScreenX = nextPointScreenX;
+            }
+            return newScreenX;
+        }
+
+        @Override
+        protected float getNewScreenX(final float playerScreenX, final float nextPointScreenX, final float velocity)
+        {
+            return calcNewScreenX(playerScreenX, nextPointScreenX, velocity);
+        }
+
+        @Override
+        protected float getNewScreenY(final float playerScreenY, final float nextPointScreenY, final float velocity)
+        {
+            return playerScreenY;
+        }
+    }
+
+    private static class UpDirectionHandler extends DirectionHandler
+    {
+        public static float calcNewScreenY(final float playerScreenY, final float nextPointScreenY, final float velocity)
+        {
+            float newScreenY = playerScreenY + velocity;
+            if (newScreenY >= nextPointScreenY)
+            {
+                newScreenY = nextPointScreenY;
+            }
+            return newScreenY;
+        }
+
+        @Override
+        protected float getNewScreenX(final float playerScreenX, final float nextPointScreenX, final float velocity)
+        {
+            return playerScreenX;
+        }
+
+        @Override
+        protected float getNewScreenY(final float playerScreenY, final float nextPointScreenY, final float velocity)
+        {
+            return calcNewScreenY(playerScreenY, nextPointScreenY, velocity);
+        }
+    }
+
+    private static class DownDirectionHandler extends DirectionHandler
+    {
+        public static float calcNewScreenY(final float playerScreenY, final float nextPointScreenY, final float velocity)
+        {
+            float newScreenY = playerScreenY - velocity;
+            if (newScreenY <= nextPointScreenY)
+            {
+                newScreenY = nextPointScreenY;
+            }
+            return newScreenY;
+        }
+
+        @Override
+        protected float getNewScreenX(final float playerScreenX, final float nextPointScreenX, final float velocity)
+        {
+            return playerScreenX;
+        }
+
+        @Override
+        protected float getNewScreenY(final float playerScreenY, final float nextPointScreenY, final float velocity)
+        {
+            return calcNewScreenY(playerScreenY, nextPointScreenY, velocity);
+        }
+    }
+
+    private static class DownLeftDirectionHandler extends DirectionHandler
+    {
+        @Override
+        protected float getNewScreenX(float playerScreenX, float nextPointScreenX, float velocity)
+        {
+            return LeftDirectionHandler.calcNewScreenX(playerScreenX, nextPointScreenX, velocity);
+        }
+
+        @Override
+        protected float getNewScreenY(float playerScreenY, float nextPointScreenY, float velocity)
+        {
+            return DownDirectionHandler.calcNewScreenY(playerScreenY, nextPointScreenY, velocity);
+        }
+    }
+
+    private static class DownRightDirectionHandler extends DirectionHandler
+    {
+        @Override
+        protected float getNewScreenX(float playerScreenX, float nextPointScreenX, float velocity)
+        {
+            return RightDirectionHandler.calcNewScreenX(playerScreenX, nextPointScreenX, velocity);
+        }
+
+        @Override
+        protected float getNewScreenY(float playerScreenY, float nextPointScreenY, float velocity)
+        {
+            return DownDirectionHandler.calcNewScreenY(playerScreenY, nextPointScreenY, velocity);
+        }
+    }
+
+    private static class UpLeftDirectionHandler extends DirectionHandler
+    {
+        @Override
+        protected float getNewScreenX(float playerScreenX, float nextPointScreenX, float velocity)
+        {
+            return LeftDirectionHandler.calcNewScreenX(playerScreenX, nextPointScreenX, velocity);
+        }
+
+        @Override
+        protected float getNewScreenY(float playerScreenY, float nextPointScreenY, float velocity)
+        {
+            return UpDirectionHandler.calcNewScreenY(playerScreenY, nextPointScreenY, velocity);
+        }
+    }
+
+    private static class UpRightDirectionHandler extends DirectionHandler
+    {
+        @Override
+        protected float getNewScreenX(float playerScreenX, float nextPointScreenX, float velocity)
+        {
+            return RightDirectionHandler.calcNewScreenX(playerScreenX, nextPointScreenX, velocity);
+        }
+
+        @Override
+        protected float getNewScreenY(float playerScreenY, float nextPointScreenY, float velocity)
+        {
+            return UpDirectionHandler.calcNewScreenY(playerScreenY, nextPointScreenY, velocity);
+        }
     }
 
 }
