@@ -17,12 +17,12 @@ import java.util.LinkedList;
 public class Player extends MovableTile implements NavigationMapObserver
 {
     private final float DEFAULT_SPEED = 96;
+    private State state;
     private final GameWorld gameWorld;
     private Texture texture;
     private PathFinder pathFinder;
     private LinkedList<Tile> path;
     private Tile nextNavigationPoint;
-    private boolean moving;
     private Direction direction;
 
     public Player(final GameWorld gameWorld)
@@ -37,7 +37,7 @@ public class Player extends MovableTile implements NavigationMapObserver
     @Override
     public void update(float deltaT)
     {
-        if (moving)
+        if (State.MOVING.equals(state))
         {
             if (nextNavigationPoint == null)
             {
@@ -49,7 +49,7 @@ public class Player extends MovableTile implements NavigationMapObserver
                 }
                 else
                 {
-                    moving = false;
+                    this.state = State.STANDING;
                 }
             }
             else
@@ -62,7 +62,7 @@ public class Player extends MovableTile implements NavigationMapObserver
     @Override
     public void onMapUpdate(final NavigationMapWrapper navigationMap)
     {
-        if (isMoving() && path != null && path.size() > 0)
+        if (State.MOVING.equals(this.state) && path != null && path.size() > 0)
         {
             for (final Tile tile : path)
             {
@@ -131,27 +131,27 @@ public class Player extends MovableTile implements NavigationMapObserver
         {
             path = pathFinder.calculatePath(getX(), getY(), destX, destY, gameWorld.getNavigationMap());
 
-            if (moving && path != null)
+            if (State.MOVING.equals(this.state) && path != null)
             {
                 //force updating the nextNavigationPoint
                 //nextNavigationPoint = path.pop();
                 //updateDirection();
             }
-            else if (!moving && path != null && path.size() > 0)
+            else if (!(State.MOVING.equals(this.state)) && path != null && path.size() > 0)
             {
-                moving = true;
+                this.state = State.MOVING;
             }
         }
     }
 
-    public boolean isMoving()
+    public State getState()
     {
-        return moving;
+        return state;
     }
 
-    public void setMoving(final boolean moving)
+    public void setState(final State state)
     {
-        this.moving = moving;
+        this.state = state;
     }
 
     public Tile getNextNavigationPoint()
@@ -191,6 +191,11 @@ public class Player extends MovableTile implements NavigationMapObserver
         pixmap.setColor(0, 1, 1, 1);
         pixmap.drawRectangle(0, 0, width, height);
         return pixmap;
+    }
+
+    public enum State
+    {
+        MOVING, STANDING, MOVING_ON_PLATFORM;
     }
 
     private enum Direction
