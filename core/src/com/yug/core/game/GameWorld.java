@@ -11,7 +11,7 @@ import com.yug.core.game.helpers.PlatformFactory;
 import com.yug.core.game.helpers.TiledMapUtils;
 import com.yug.core.game.model.NavigationMapWrapper;
 import com.yug.core.game.model.Platform;
-import com.yug.core.game.model.player.Player;
+import com.yug.core.game.model.Player;
 import com.yug.core.game.model.Tile;
 
 import java.util.LinkedList;

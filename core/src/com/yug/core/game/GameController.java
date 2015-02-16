@@ -2,7 +2,7 @@ package com.yug.core.game;
 
 import com.yug.core.game.handlers.GameInputHandler;
 import com.yug.core.game.model.Platform;
-import com.yug.core.game.model.player.Player;
+import com.yug.core.game.model.Player;
 import com.yug.core.game.model.Tile;
 
 /**
