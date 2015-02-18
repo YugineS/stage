@@ -2,12 +2,15 @@ package com.yug.core.game.model;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.yug.core.game.GameWorld;
 
 public class Platform extends MovableTile
 {
     private State state = State.STANDING;
     private Type type = Type.PLATFORM;
     private Texture testTexture;
+    private GameWorld gameWorld;
+    private Player player;
 
     public Platform()
     {
@@ -56,6 +59,26 @@ public class Platform extends MovableTile
     {
         this.state = state;
         this.state.getHandler().enterState(this);
+    }
+
+    public Player getPlayer()
+    {
+        return player;
+    }
+
+    public void setPlayer(final Player player)
+    {
+        this.player = player;
+    }
+
+    public GameWorld getGameWorld()
+    {
+        return gameWorld;
+    }
+
+    public void setGameWorld(final GameWorld gameWorld)
+    {
+        this.gameWorld = gameWorld;
     }
 
     public enum State
@@ -369,21 +392,29 @@ public class Platform extends MovableTile
         public void handleInput(FlingDirection flingDirection, Platform platform)
         {
             final Type platformType = platform.getType();
+            State nextState = null;
             if (FlingDirection.LEFT == flingDirection && (Type.PLATFORM == platformType || Type.HORIZONTAL_PLATFORM == platformType || Type.LEFT_PLATFORM == platformType))
             {
-                platform.setState(State.MOVING_LEFT);
+                nextState = State.MOVING_LEFT;
             }
             else if (FlingDirection.RIGHT == flingDirection && (Type.PLATFORM == platformType || Type.HORIZONTAL_PLATFORM == platformType || Type.RIGHT_PLATFORM == platformType))
             {
-                platform.setState(State.MOVING_RIGHT);
+                nextState = State.MOVING_RIGHT;
             }
             else if (FlingDirection.UP == flingDirection && (Type.PLATFORM == platformType || Type.VERTICAL_PLATFORM == platformType || Type.UP_PLATFORM == platformType))
             {
-                platform.setState(State.MOVING_UP);
+                nextState = State.MOVING_UP;
             }
             else if (FlingDirection.DOWN == flingDirection && (Type.PLATFORM == platformType || Type.VERTICAL_PLATFORM == platformType || Type.DOWN_PLATFORM == platformType))
             {
-                platform.setState(State.MOVING_DOWN);
+                nextState = State.MOVING_DOWN;
+            }
+            final Player player = platform.getGameWorld().getPlayer();
+            final Tile playerNextNavigationPoint = player.getNextNavigationPoint();
+            final boolean blockedByPlayer = playerNextNavigationPoint != null && playerNextNavigationPoint.getX() == platform.getX() && playerNextNavigationPoint.getY() == platform.getY();
+            if (nextState != null && !blockedByPlayer)
+            {
+                platform.setState(nextState);
             }
         }
 

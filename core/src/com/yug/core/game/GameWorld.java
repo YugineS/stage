@@ -108,6 +108,7 @@ public class GameWorld
             if (TM_OBJECT_TYPE_PLATFORM.equals(objectType))
             {
                 final Platform platform = platformFactory.createPlatform(tileWidth, tileHeight, objectProperties);
+                platform.setGameWorld(this);
                 navigationMap.setPoint(platform, platform.getX(), platform.getY());
                 platforms.add(platform);
             }
