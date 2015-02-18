@@ -14,16 +14,14 @@ public class Player extends MovableTile implements NavigationMapObserver
 {
     private final float DEFAULT_SPEED = 96;
     private State state;
-    private final GameWorld gameWorld;
     private Texture texture;
     private PathFinder pathFinder;
     private LinkedList<Tile> path;
     private Tile nextNavigationPoint;
     private Direction direction;
 
-    public Player(final GameWorld gameWorld)
+    public Player()
     {
-        this.gameWorld = gameWorld;
         setSpeed(DEFAULT_SPEED);
         pathFinder = new PathFinder();
         texture = createTestTexture();
@@ -125,7 +123,7 @@ public class Player extends MovableTile implements NavigationMapObserver
     {
         if (getX() != destX || getY() != destY)
         {
-            path = pathFinder.calculatePath(getX(), getY(), destX, destY, gameWorld.getNavigationMap());
+            path = pathFinder.calculatePath(getX(), getY(), destX, destY, GameWorld.getInstance().getNavigationMap());
 
             if (State.MOVING.equals(this.state) && path != null)
             {

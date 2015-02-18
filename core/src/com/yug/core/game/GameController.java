@@ -10,12 +10,7 @@ import com.yug.core.game.model.Tile;
  */
 public class GameController implements GameInputHandler
 {
-    private final GameWorld gameWorld;
-
-    public GameController(final GameWorld gameWorld)
-    {
-        this.gameWorld = gameWorld;
-    }
+    private final GameWorld gameWorld = GameWorld.getInstance();
 
     /**
      * Updates game state.

@@ -11,13 +11,12 @@ import com.yug.core.game.model.Platform;
 public class GameRenderer
 {
     private final SpriteBatch batch;
-    private final GameWorld gameWorld;
     private final OrthographicCamera cam;
     private OrthogonalTiledMapRenderer tmRenderer;
+    private final GameWorld gameWorld = GameWorld.getInstance();
 
-    public GameRenderer(final GameWorld gameWorld)
+    public GameRenderer()
     {
-        this.gameWorld = gameWorld;
         batch = new SpriteBatch();
         cam = new OrthographicCamera();
         cam.setToOrtho(false, Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);

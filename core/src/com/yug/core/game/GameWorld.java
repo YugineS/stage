@@ -51,12 +51,16 @@ public class GameWorld
 
     private Player player;
 
-    public GameWorld()
+    private static GameWorld instance = new GameWorld();
+    private GameWorld()
     {
         tmLoader = new TmxMapLoader();
         platformFactory = new PlatformFactory();
-        player = new Player(this);
-
+        player = new Player();
+    }
+    public static GameWorld getInstance()
+    {
+        return instance;
     }
 
     public void loadLevel(final LevelName levelName)
@@ -108,7 +112,6 @@ public class GameWorld
             if (TM_OBJECT_TYPE_PLATFORM.equals(objectType))
             {
                 final Platform platform = platformFactory.createPlatform(tileWidth, tileHeight, objectProperties);
-                platform.setGameWorld(this);
                 navigationMap.setPoint(platform, platform.getX(), platform.getY());
                 platforms.add(platform);
             }

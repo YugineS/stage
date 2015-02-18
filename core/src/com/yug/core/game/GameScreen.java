@@ -11,19 +11,15 @@ import com.yug.core.game.handlers.GameGestureListener;
  */
 public class GameScreen implements Screen
 {
-
-
-    private final GameWorld gameWorld;
     private final GameController controller;
     private final GameRenderer renderer;
     private final GameGestureListener gameGestureListener;
 
     public GameScreen()
     {
-        gameWorld = new GameWorld();
-        gameWorld.loadLevel(LevelName.LEVEL_TEST);
-        controller = new GameController(gameWorld);
-        renderer = new GameRenderer(gameWorld);
+        GameWorld.getInstance().loadLevel(LevelName.LEVEL_TEST);
+        controller = new GameController();
+        renderer = new GameRenderer();
         gameGestureListener = new GameGestureListener(controller, renderer.getCamera());
 
 //        texture = new Texture(Gdx.files.internal("libgdx-logo.png"));

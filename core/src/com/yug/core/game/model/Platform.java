@@ -9,7 +9,6 @@ public class Platform extends MovableTile
     private State state = State.STANDING;
     private Type type = Type.PLATFORM;
     private Texture testTexture;
-    private GameWorld gameWorld;
     private Player player;
 
     public Platform()
@@ -69,16 +68,6 @@ public class Platform extends MovableTile
     public void setPlayer(final Player player)
     {
         this.player = player;
-    }
-
-    public GameWorld getGameWorld()
-    {
-        return gameWorld;
-    }
-
-    public void setGameWorld(final GameWorld gameWorld)
-    {
-        this.gameWorld = gameWorld;
     }
 
     public enum State
@@ -409,7 +398,7 @@ public class Platform extends MovableTile
             {
                 nextState = State.MOVING_DOWN;
             }
-            final Player player = platform.getGameWorld().getPlayer();
+            final Player player = GameWorld.getInstance().getPlayer();
             final Tile playerNextNavigationPoint = player.getNextNavigationPoint();
             final boolean blockedByPlayer = playerNextNavigationPoint != null && playerNextNavigationPoint.getX() == platform.getX() && playerNextNavigationPoint.getY() == platform.getY();
             if (nextState != null && !blockedByPlayer)
