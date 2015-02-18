@@ -14,171 +14,27 @@ public class Platform extends MovableTile
         testTexture = createTestTexture();
     }
 
-    public void moveLeft()
+    public void onFling(final FlingDirection flingDirection)
     {
-        if (getLeftX() > -1 && (Type.PLATFORM.equals(type) || Type.HORIZONTAL_PLATFORM.equals(type) || Type.LEFT_PLATFORM.equals(type)))
-        {
-            if (State.STANDING.equals(state) || State.MOVING_RIGHT.equals(state))
-            {
-                if (State.STANDING.equals(state))
-                {
-                    //updating navigation map. The platform moved from original place.
-                    getNavigationMap().setPoint(null, getX(), getY());
-                }
-                state = State.MOVING_LEFT;
-            }
-        }
-    }
-
-    public void moveRight()
-    {
-        if (getRightX() > -1 && (Type.PLATFORM.equals(type) || Type.HORIZONTAL_PLATFORM.equals(type) || Type.RIGHT_PLATFORM.equals(type)))
-        {
-            if (State.STANDING.equals(state) || State.MOVING_LEFT.equals(state))
-            {
-                if (State.STANDING.equals(state))
-                {
-                    //updating navigation map. The platform moved from original place.
-                    getNavigationMap().setPoint(null, getX(), getY());
-                }
-                state = State.MOVING_RIGHT;
-            }
-        }
-    }
-
-    public void moveUp()
-    {
-        if (getTopY() > -1 && (Type.PLATFORM.equals(type) || Type.VERTICAL_PLATFORM.equals(type) || Type.UP_PLATFORM.equals(type)))
-        {
-            if (State.STANDING.equals(state) || State.MOVING_DOWN.equals(state))
-            {
-                if (State.STANDING.equals(state))
-                {
-                    //updating navigation map. The platform moved from original place.
-                    getNavigationMap().setPoint(null, getX(), getY());
-                }
-                state = State.MOVING_UP;
-            }
-        }
-    }
-
-    public void moveDown()
-    {
-        if (getBottomY() > -1 && (Type.PLATFORM.equals(type) || Type.VERTICAL_PLATFORM.equals(type) || Type.DOWN_PLATFORM.equals(type)))
-        {
-            if (State.STANDING.equals(state) || State.MOVING_UP.equals(state))
-            {
-                if (State.STANDING.equals(state))
-                {
-                    //updating navigation map. The platform moved from original place.
-                    getNavigationMap().setPoint(null, getX(), getY());
-                }
-                state = State.MOVING_DOWN;
-            }
-        }
+        this.state.getHandler().handleInput(flingDirection, this);
     }
 
     @Override
     public void update(float deltaT)
     {
-        final NavigationMapWrapper navigationMap = getNavigationMap();
-        final int leftX = getLeftX();
-        final int rightX = getRightX();
-        final int topY = getTopY();
-        final int bottomY = getBottomY();
-
-        if (State.MOVING_LEFT.equals(state) && leftX > -1)
-        {
-            float newScreenX = getScreenX() - getSpeed() * deltaT;
-            final float leftScreenX = leftX * getWidth();
-            if (newScreenX <= leftScreenX)
-            {
-                newScreenX = leftScreenX;
-                setX(leftX);
-                if (navigationMap.getLeftOf(getX(), getY()) != null)
-                {
-                    arrive();
-                }
-            }
-            setScreenX(newScreenX);
-        }
-        else if (State.MOVING_RIGHT.equals(state) && rightX > -1)
-        {
-            float newScreenX = getScreenX() + getSpeed() * deltaT;
-            final float rightScreenX = rightX * getWidth();
-            if (newScreenX >= rightScreenX)
-            {
-                newScreenX = rightScreenX;
-                setX(rightX);
-                if (navigationMap.getRightOf(getX(), getY()) != null)
-                {
-                    arrive();
-                }
-            }
-            setScreenX(newScreenX);
-        }
-        else if (State.MOVING_UP.equals(state) && topY > -1)
-        {
-            float newScreenY = getScreenY() + getSpeed() * deltaT;
-            final float topScreenY = topY * getHeight();
-            if (newScreenY >= topScreenY)
-            {
-                newScreenY = topScreenY;
-                setY(topY);
-                if (navigationMap.getTopOf(getX(), getY()) != null)
-                {
-                    arrive();
-                }
-            }
-            setScreenY(newScreenY);
-        }
-        else if (State.MOVING_DOWN.equals(state) && bottomY > -1)
-        {
-            float newScreenY = getScreenY() - getSpeed() * deltaT;
-            final float bottomScreenY = bottomY * getHeight();
-            if (newScreenY <= bottomScreenY)
-            {
-                newScreenY = bottomScreenY;
-                setY(bottomY);
-                if (navigationMap.getBottomOf(getX(), getY()) != null)
-                {
-                    arrive();
-                }
-            }
-            setScreenY(newScreenY);
-        }
+        this.state.getHandler().update(deltaT, this);
     }
 
-    private void arrive()
+    private void onArrive()
     {
-        state = State.STANDING;
+        setState(State.STANDING);
         getNavigationMap().setPoint(this, getX(), getY());
     }
 
-    private int getLeftX()
+    private void onPositionChanged()
     {
-        final int leftX = getX() - 1;
-        return leftX > -1 && getNavigationMap().getLeftOf(getX(), getY()) == null ? leftX : -1;
-    }
-
-    private int getRightX()
-    {
-        final int rightX = getX() + 1;
-        final NavigationMapWrapper navigationMap = getNavigationMap();
-        return rightX < navigationMap.getMapWidth() && navigationMap.getRightOf(getX(), getY()) == null ? rightX : -1;
-    }
-
-    private int getTopY()
-    {
-        final int topY = getY() + 1;
-        final NavigationMapWrapper navigationMap = getNavigationMap();
-        return topY < navigationMap.getMapHeight() && navigationMap.getTopOf(getX(), getY()) == null ? topY : -1;
-    }
-
-    private int getBottomY()
-    {
-        final int bottomY = getY() - 1;
-        return bottomY > -1 && getNavigationMap().getBottomOf(getX(), getY()) == null ? bottomY : -1;
+        //updating navigation map. The platform moved from original place.
+        getNavigationMap().setPoint(null, getX(), getY());
     }
 
     public Type getType()
@@ -191,9 +47,35 @@ public class Platform extends MovableTile
         this.type = type;
     }
 
+    public State getState()
+    {
+        return state;
+    }
+
+    public void setState(final State state)
+    {
+        this.state = state;
+        this.state.getHandler().enterState(this);
+    }
+
     public enum State
     {
-        MOVING_LEFT, MOVING_RIGHT, MOVING_UP, MOVING_DOWN, STANDING
+        MOVING_LEFT(new MovingLeftStateHandler()),
+        MOVING_RIGHT(new MovingRightStateHandler()),
+        MOVING_UP(new MovingUpStateHandler()),
+        MOVING_DOWN(new MovingDownStateHandler()),
+        STANDING(new StandingStateHandler());
+        private StateHandler handler;
+
+        private State(final StateHandler handler)
+        {
+            this.handler = handler;
+        }
+
+        public StateHandler getHandler()
+        {
+            return handler;
+        }
     }
 
     public enum Type
@@ -233,6 +115,11 @@ public class Platform extends MovableTile
         }
     }
 
+    public enum FlingDirection
+    {
+        LEFT, RIGHT, UP, DOWN
+    }
+
 
     public Texture getTexture()
     {
@@ -261,6 +148,256 @@ public class Platform extends MovableTile
         pixmap.setColor(0, 1, 1, 1);
         pixmap.drawRectangle(0, 0, width, height);
         return pixmap;
+    }
+
+    private static interface StateHandler
+    {
+        void handleInput(final FlingDirection flingDirection, final Platform platform);
+
+        void update(final float deltaT, final Platform platform);
+
+        void enterState(final Platform platform);
+    }
+
+    private static class MovingLeftStateHandler implements StateHandler
+    {
+        @Override
+        public void handleInput(final FlingDirection flingDirection, final Platform platform)
+        {
+            if (Type.HORIZONTAL_PLATFORM == platform.getType() && FlingDirection.RIGHT == flingDirection)
+            {
+                platform.setState(State.MOVING_RIGHT);
+            }
+        }
+
+        @Override
+        public void enterState(final Platform platform)
+        {
+            if (canMoveLeft(platform.getX(), platform.getY(), platform.getNavigationMap()))
+            {
+                platform.onPositionChanged();
+            }
+        }
+
+        @Override
+        public void update(float deltaT, final Platform platform)
+        {
+            final NavigationMapWrapper navigationMap = platform.getNavigationMap();
+            final int platformX = platform.getX();
+            final int platformY = platform.getY();
+            if (canMoveLeft(platformX, platformY, navigationMap))
+            {
+                final int leftX = platformX - 1;
+                float newScreenX = platform.getScreenX() - platform.getSpeed() * deltaT;
+                final float leftScreenX = leftX * platform.getWidth();
+                if (newScreenX <= leftScreenX)
+                {
+                    newScreenX = leftScreenX;
+                    platform.setX(leftX);
+                    if (!canMoveLeft(leftX, platformY, navigationMap))
+                    {
+                        platform.onArrive();
+                    }
+                }
+                platform.setScreenX(newScreenX);
+            }
+        }
+
+        private boolean canMoveLeft(final int x, final int y, final NavigationMapWrapper navigationMap)
+        {
+            final int leftX = x - 1;
+            return navigationMap.isInBounds(leftX, y) && navigationMap.getPoint(leftX, y) == null;
+        }
+    }
+
+    private static class MovingRightStateHandler implements StateHandler
+    {
+        @Override
+        public void handleInput(final FlingDirection flingDirection, final Platform platform)
+        {
+            if (Type.HORIZONTAL_PLATFORM == platform.getType() && FlingDirection.LEFT == flingDirection)
+            {
+                platform.setState(State.MOVING_LEFT);
+            }
+        }
+
+        @Override
+        public void update(final float deltaT, final Platform platform)
+        {
+            final NavigationMapWrapper navigationMap = platform.getNavigationMap();
+            final int platformX = platform.getX();
+            final int platformY = platform.getY();
+            if (canMoveRight(platformX, platformY, navigationMap))
+            {
+                final int rightX = platformX + 1;
+                float newScreenX = platform.getScreenX() + platform.getSpeed() * deltaT;
+                final float rightScreenX = rightX * platform.getWidth();
+                if (newScreenX >= rightScreenX)
+                {
+                    newScreenX = rightScreenX;
+                    platform.setX(rightX);
+                    if (!canMoveRight(rightX, platformY, navigationMap))
+                    {
+                        platform.onArrive();
+                    }
+                }
+                platform.setScreenX(newScreenX);
+            }
+        }
+
+        @Override
+        public void enterState(final Platform platform)
+        {
+            if (canMoveRight(platform.getX(), platform.getY(), platform.getNavigationMap()))
+            {
+                platform.onPositionChanged();
+            }
+        }
+
+        private boolean canMoveRight(final int x, final int y, final NavigationMapWrapper navigationMap)
+        {
+            final int rightX = x + 1;
+            return navigationMap.isInBounds(rightX, y) && navigationMap.getPoint(rightX, y) == null;
+        }
+    }
+
+    private static class MovingUpStateHandler implements StateHandler
+    {
+        @Override
+        public void handleInput(final FlingDirection flingDirection, final Platform platform)
+        {
+            if (Type.VERTICAL_PLATFORM == platform.getType() && FlingDirection.DOWN == flingDirection)
+            {
+                platform.setState(State.MOVING_DOWN);
+            }
+        }
+
+        @Override
+        public void update(final float deltaT, final Platform platform)
+        {
+            final NavigationMapWrapper navigationMap = platform.getNavigationMap();
+            final int platformX = platform.getX();
+            final int platformY = platform.getY();
+            if (canMoveUp(platformX, platformY, navigationMap))
+            {
+                final int topY = platformY + 1;
+                float newScreenY = platform.getScreenY() + platform.getSpeed() * deltaT;
+                final float topScreenY = topY * platform.getHeight();
+                if (newScreenY >= topScreenY)
+                {
+                    newScreenY = topScreenY;
+                    platform.setY(topY);
+                    if (!canMoveUp(platformX, topY, navigationMap))
+                    {
+                        platform.onArrive();
+                    }
+                }
+                platform.setScreenY(newScreenY);
+            }
+        }
+
+        @Override
+        public void enterState(final Platform platform)
+        {
+            if (canMoveUp(platform.getX(), platform.getY(), platform.getNavigationMap()))
+            {
+                platform.onPositionChanged();
+            }
+        }
+
+        private boolean canMoveUp(final int x, final int y, final NavigationMapWrapper navigationMap)
+        {
+            final int topY = y + 1;
+            return navigationMap.isInBounds(x, topY) && navigationMap.getPoint(x, topY) == null;
+        }
+    }
+
+    private static class MovingDownStateHandler implements StateHandler
+    {
+        @Override
+        public void handleInput(final FlingDirection flingDirection, final Platform platform)
+        {
+            if (Type.VERTICAL_PLATFORM == platform.getType() && FlingDirection.UP == flingDirection)
+            {
+                platform.setState(State.MOVING_UP);
+            }
+        }
+
+        @Override
+        public void update(final float deltaT, final Platform platform)
+        {
+            final NavigationMapWrapper navigationMap = platform.getNavigationMap();
+            final int platformX = platform.getX();
+            final int platformY = platform.getY();
+            if (canMoveDown(platformX, platformY, navigationMap))
+            {
+                final int bottomY = platformY - 1;
+                float newScreenY = platform.getScreenY() - platform.getSpeed() * deltaT;
+                final float bottomScreenY = bottomY * platform.getHeight();
+                if (newScreenY <= bottomScreenY)
+                {
+                    newScreenY = bottomScreenY;
+                    platform.setY(bottomY);
+                    if (!canMoveDown(platformX, bottomY, navigationMap))
+                    {
+                        platform.onArrive();
+                    }
+                }
+                platform.setScreenY(newScreenY);
+            }
+        }
+
+        @Override
+        public void enterState(final Platform platform)
+        {
+            if (canMoveDown(platform.getX(), platform.getY(), platform.getNavigationMap()))
+            {
+                platform.onPositionChanged();
+            }
+        }
+
+        private boolean canMoveDown(final int x, final int y, final NavigationMapWrapper navigationMap)
+        {
+            final int bottomY = y - 1;
+            return navigationMap.isInBounds(x, bottomY) && navigationMap.getPoint(x, bottomY) == null;
+        }
+    }
+
+    private static class StandingStateHandler implements StateHandler
+    {
+        @Override
+        public void handleInput(FlingDirection flingDirection, Platform platform)
+        {
+            final Type platformType = platform.getType();
+            if (FlingDirection.LEFT == flingDirection && (Type.PLATFORM == platformType || Type.HORIZONTAL_PLATFORM == platformType || Type.LEFT_PLATFORM == platformType))
+            {
+                platform.setState(State.MOVING_LEFT);
+            }
+            else if (FlingDirection.RIGHT == flingDirection && (Type.PLATFORM == platformType || Type.HORIZONTAL_PLATFORM == platformType || Type.RIGHT_PLATFORM == platformType))
+            {
+                platform.setState(State.MOVING_RIGHT);
+            }
+            else if (FlingDirection.UP == flingDirection && (Type.PLATFORM == platformType || Type.VERTICAL_PLATFORM == platformType || Type.UP_PLATFORM == platformType))
+            {
+                platform.setState(State.MOVING_UP);
+            }
+            else if (FlingDirection.DOWN == flingDirection && (Type.PLATFORM == platformType || Type.VERTICAL_PLATFORM == platformType || Type.DOWN_PLATFORM == platformType))
+            {
+                platform.setState(State.MOVING_DOWN);
+            }
+        }
+
+        @Override
+        public void update(float deltaT, Platform platform)
+        {
+
+        }
+
+        @Override
+        public void enterState(Platform platform)
+        {
+
+        }
     }
 
 }

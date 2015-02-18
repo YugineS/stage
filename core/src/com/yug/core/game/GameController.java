@@ -57,11 +57,11 @@ public class GameController implements GameInputHandler
                 //horizontal flip
                 if (velocityX > 0)
                 {
-                    platform.moveRight();
+                    platform.onFling(Platform.FlingDirection.RIGHT);
                 }
                 else
                 {
-                    platform.moveLeft();
+                    platform.onFling(Platform.FlingDirection.LEFT);
                 }
             }
             else
@@ -69,11 +69,11 @@ public class GameController implements GameInputHandler
                 //vertical flip
                 if (velocityY > 0)
                 {
-                    platform.moveDown();
+                    platform.onFling(Platform.FlingDirection.DOWN);
                 }
                 else
                 {
-                    platform.moveUp();
+                    platform.onFling(Platform.FlingDirection.UP);
                 }
             }
         }
