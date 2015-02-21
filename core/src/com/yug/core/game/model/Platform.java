@@ -8,13 +8,8 @@ public class Platform extends MovableTile
 {
     private State state = State.STANDING;
     private Type type = Type.PLATFORM;
-    private Texture testTexture;
+    private Texture testTexture = createTestTexture();
     private Player player;
-
-    public Platform()
-    {
-        testTexture = createTestTexture();
-    }
 
     public void onFling(final FlingDirection flingDirection)
     {
@@ -24,17 +19,36 @@ public class Platform extends MovableTile
     @Override
     public void update(float deltaT)
     {
-        this.state.getHandler().update(deltaT, this);
+        state.getHandler().update(deltaT, this);
+        if (this.player != null)
+        {
+            this.player.setScreenX(getScreenX());
+            this.player.setScreenY(getScreenY());
+            this.player.setX(getX());
+            this.player.setY(getY());
+            if (Player.State.MOVING_ON_PLATFORM != player.getState())
+            {
+                this.player = null;
+            }
+        }
     }
 
     private void onArrive()
     {
-        setState(State.STANDING);
+        if (this.player != null)
+        {
+            this.player.setState(Player.State.STANDING);
+        }
+
         getNavigationMap().setPoint(this, getX(), getY());
     }
 
-    private void onPositionChanged()
+    private void onStartMoving()
     {
+        if (this.player != null)
+        {
+            this.player.setState(Player.State.MOVING_ON_PLATFORM);
+        }
         //updating navigation map. The platform moved from original place.
         getNavigationMap().setPoint(null, getX(), getY());
     }
@@ -77,7 +91,7 @@ public class Platform extends MovableTile
         MOVING_UP(new MovingUpStateHandler()),
         MOVING_DOWN(new MovingDownStateHandler()),
         STANDING(new StandingStateHandler());
-        private StateHandler handler;
+        private final StateHandler handler;
 
         private State(final StateHandler handler)
         {
@@ -187,7 +201,7 @@ public class Platform extends MovableTile
         {
             if (canMoveLeft(platform.getX(), platform.getY(), platform.getNavigationMap()))
             {
-                platform.onPositionChanged();
+                platform.onStartMoving();
             }
         }
 
@@ -209,9 +223,14 @@ public class Platform extends MovableTile
                     if (!canMoveLeft(leftX, platformY, navigationMap))
                     {
                         platform.onArrive();
+                        platform.setState(State.STANDING);
                     }
                 }
                 platform.setScreenX(newScreenX);
+            }
+            else
+            {
+                platform.setState(State.STANDING);
             }
         }
 
@@ -251,9 +270,14 @@ public class Platform extends MovableTile
                     if (!canMoveRight(rightX, platformY, navigationMap))
                     {
                         platform.onArrive();
+                        platform.setState(State.STANDING);
                     }
                 }
                 platform.setScreenX(newScreenX);
+            }
+            else
+            {
+                platform.setState(State.STANDING);
             }
         }
 
@@ -262,7 +286,7 @@ public class Platform extends MovableTile
         {
             if (canMoveRight(platform.getX(), platform.getY(), platform.getNavigationMap()))
             {
-                platform.onPositionChanged();
+                platform.onStartMoving();
             }
         }
 
@@ -302,9 +326,14 @@ public class Platform extends MovableTile
                     if (!canMoveUp(platformX, topY, navigationMap))
                     {
                         platform.onArrive();
+                        platform.setState(State.STANDING);
                     }
                 }
                 platform.setScreenY(newScreenY);
+            }
+            else
+            {
+                platform.setState(State.STANDING);
             }
         }
 
@@ -313,7 +342,7 @@ public class Platform extends MovableTile
         {
             if (canMoveUp(platform.getX(), platform.getY(), platform.getNavigationMap()))
             {
-                platform.onPositionChanged();
+                platform.onStartMoving();
             }
         }
 
@@ -353,9 +382,14 @@ public class Platform extends MovableTile
                     if (!canMoveDown(platformX, bottomY, navigationMap))
                     {
                         platform.onArrive();
+                        platform.setState(State.STANDING);
                     }
                 }
                 platform.setScreenY(newScreenY);
+            }
+            else
+            {
+                platform.setState(State.STANDING);
             }
         }
 
@@ -364,7 +398,7 @@ public class Platform extends MovableTile
         {
             if (canMoveDown(platform.getX(), platform.getY(), platform.getNavigationMap()))
             {
-                platform.onPositionChanged();
+                platform.onStartMoving();
             }
         }
 
@@ -403,6 +437,14 @@ public class Platform extends MovableTile
             final boolean blockedByPlayer = playerNextNavigationPoint != null && playerNextNavigationPoint.getX() == platform.getX() && playerNextNavigationPoint.getY() == platform.getY();
             if (nextState != null && !blockedByPlayer)
             {
+                if (player.getX() == platform.getX() && player.getY() == platform.getY())
+                {
+                    platform.setPlayer(player);
+                }
+                else
+                {
+                    platform.setPlayer(null);
+                }
                 platform.setState(nextState);
             }
         }

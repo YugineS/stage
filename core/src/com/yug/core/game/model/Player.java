@@ -121,7 +121,7 @@ public class Player extends MovableTile implements NavigationMapObserver
 
     public void goTo(final int destX, final int destY)
     {
-        if (getX() != destX || getY() != destY)
+        if (State.MOVING_ON_PLATFORM != state && (getX() != destX || getY() != destY))
         {
             path = pathFinder.calculatePath(getX(), getY(), destX, destY, GameWorld.getInstance().getNavigationMap());
 
@@ -131,7 +131,7 @@ public class Player extends MovableTile implements NavigationMapObserver
                 //nextNavigationPoint = path.pop();
                 //updateDirection();
             }
-            else if (!(State.MOVING.equals(this.state)) && path != null && path.size() > 0)
+            else if (State.MOVING != state && path != null && path.size() > 0)
             {
                 this.state = State.MOVING;
             }
@@ -189,7 +189,7 @@ public class Player extends MovableTile implements NavigationMapObserver
 
     public enum State
     {
-        MOVING, STANDING, MOVING_ON_PLATFORM;
+        MOVING, STANDING, MOVING_ON_PLATFORM
     }
 
     private enum Direction
