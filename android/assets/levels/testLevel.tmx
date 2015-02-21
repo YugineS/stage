@@ -36,7 +36,7 @@
    <property name="walkable" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYKA+YKISRjaPWHvQ9VDbPGx8WptHTBhhs5sc83CZjcs8XH7DZR6x6olxLza/keI/UsOUGgAAakcA1Q==
+   eJxjYKA+YCISE1KPLI/PHmxqmNDUUMs8bHxc5hGrn5B52MwnZCch8/CFCbocPvOwmYXPPGLjHx3gMw+bWkJm4rOflgAADXcAmQ==
   </data>
  </layer>
  <objectgroup name="platforms" width="20" height="11">
@@ -48,6 +48,22 @@
     <property name="platformType" value="platform"/>
     <property name="type" value="platform"/>
     <property name="x" value="5"/>
+    <property name="y" value="6"/>
+   </properties>
+  </object>
+  <object gid="4" x="352" y="192">
+   <properties>
+    <property name="platformType" value="platform"/>
+    <property name="type" value="platform"/>
+    <property name="x" value="11"/>
+    <property name="y" value="5"/>
+   </properties>
+  </object>
+  <object gid="4" x="288" y="160">
+   <properties>
+    <property name="platformType" value="platform"/>
+    <property name="type" value="platform"/>
+    <property name="x" value="9"/>
     <property name="y" value="6"/>
    </properties>
   </object>
