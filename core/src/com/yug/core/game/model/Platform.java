@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.yug.core.game.GameWorld;
 
+import java.util.List;
+
 public class Platform extends MovableTile
 {
     private State state = State.STANDING;
@@ -39,8 +41,8 @@ public class Platform extends MovableTile
         {
             this.player.setState(Player.State.STANDING);
         }
-
         getNavigationMap().setPoint(this, getX(), getY());
+        unblockOtherPlatforms();
     }
 
     private void onStartMoving()
@@ -51,6 +53,32 @@ public class Platform extends MovableTile
         }
         //updating navigation map. The platform moved from original place.
         getNavigationMap().setPoint(null, getX(), getY());
+        blockOtherPlatforms();
+    }
+
+    private void blockOtherPlatforms()
+    {
+        final List<Platform> platforms = GameWorld.getInstance().getPlatforms();
+        for (final Platform platform : platforms)
+        {
+            if (this == platform)
+            {
+                continue;
+            }
+            platform.setState(Platform.State.BLOCKED);
+        }
+    }
+
+    private void unblockOtherPlatforms()
+    {
+        final List<Platform> platforms = GameWorld.getInstance().getPlatforms();
+        for (final Platform platform : platforms)
+        {
+            if (State.BLOCKED == platform.getState())
+            {
+                platform.setState(State.STANDING);
+            }
+        }
     }
 
     public Type getType()
@@ -90,7 +118,8 @@ public class Platform extends MovableTile
         MOVING_RIGHT(new MovingRightStateHandler()),
         MOVING_UP(new MovingUpStateHandler()),
         MOVING_DOWN(new MovingDownStateHandler()),
-        STANDING(new StandingStateHandler());
+        STANDING(new StandingStateHandler()),
+        BLOCKED(new BlockedStateHandler());
         private final StateHandler handler;
 
         private State(final StateHandler handler)
@@ -457,6 +486,27 @@ public class Platform extends MovableTile
 
         @Override
         public void enterState(Platform platform)
+        {
+
+        }
+    }
+
+    private static class BlockedStateHandler implements StateHandler
+    {
+        @Override
+        public void handleInput(final FlingDirection flingDirection, final Platform platform)
+        {
+
+        }
+
+        @Override
+        public void update(final float deltaT, final Platform platform)
+        {
+
+        }
+
+        @Override
+        public void enterState(final Platform platform)
         {
 
         }
