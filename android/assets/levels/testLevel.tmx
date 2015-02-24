@@ -12,6 +12,11 @@
     <property name="isWall" value="false"/>
    </properties>
   </tile>
+  <tile id="2">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+   </properties>
+  </tile>
   <tile id="3">
    <properties>
     <property name="" value=""/>
@@ -65,6 +70,27 @@
     <property name="type" value="platform"/>
     <property name="x" value="9"/>
     <property name="y" value="6"/>
+   </properties>
+  </object>
+  <object gid="3" x="224" y="256">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="7"/>
+    <property name="y" value="3"/>
+   </properties>
+  </object>
+  <object gid="3" x="256" y="256">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="8"/>
+    <property name="y" value="3"/>
+   </properties>
+  </object>
+  <object gid="3" x="288" y="256">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="9"/>
+    <property name="y" value="3"/>
    </properties>
   </object>
  </objectgroup>

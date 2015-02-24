@@ -4,6 +4,9 @@ import com.yug.core.game.handlers.GameInputHandler;
 import com.yug.core.game.model.Platform;
 import com.yug.core.game.model.Player;
 import com.yug.core.game.model.Tile;
+import com.yug.core.game.model.VanishingTile;
+
+import java.util.Iterator;
 
 /**
  * Created by yugine on 15.1.15.
@@ -24,6 +27,16 @@ public class GameController implements GameInputHandler
         for (final Platform platform : gameWorld.getPlatforms())
         {
             platform.update(deltaT);
+        }
+        final Iterator<VanishingTile> vanishingTilesIterator = gameWorld.getVanishingTiles().iterator();
+        while(vanishingTilesIterator.hasNext())
+        {
+            final VanishingTile vanishingTile = vanishingTilesIterator.next();
+            vanishingTile.update(deltaT);
+            if (VanishingTile.State.DESTROYED == vanishingTile.getState())
+            {
+                vanishingTilesIterator.remove();
+            }
         }
     }
 

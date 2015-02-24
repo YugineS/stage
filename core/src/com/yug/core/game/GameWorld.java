@@ -9,10 +9,12 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.yug.core.game.helpers.PlatformFactory;
 import com.yug.core.game.helpers.TiledMapUtils;
+import com.yug.core.game.helpers.VanishingTilesFactory;
 import com.yug.core.game.model.NavigationMapWrapper;
 import com.yug.core.game.model.Platform;
 import com.yug.core.game.model.Player;
 import com.yug.core.game.model.Tile;
+import com.yug.core.game.model.VanishingTile;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class GameWorld
     public static final String TM_PLATFORM_TYPE = "platformType";
 
     public static final String TM_OBJECT_TYPE_PLATFORM = "platform";
+    public static final String TM_OBJECT_TYPE_VANISHING_TILE = "vanishingTile";
 
     private TmxMapLoader tmLoader;
     private TiledMap tiledMap;
@@ -47,15 +50,18 @@ public class GameWorld
     private float tileHeight;
     private NavigationMapWrapper navigationMap;
     private List<Platform> platforms = new LinkedList<Platform>();
-    private PlatformFactory platformFactory;
+    private List<VanishingTile> vanishingTiles = new LinkedList<VanishingTile>();
+    private final PlatformFactory platformFactory;
+    private final VanishingTilesFactory vanishingTilesFactory;
 
-    private Player player;
+    private final Player player;
 
     private static GameWorld instance = new GameWorld();
     private GameWorld()
     {
         tmLoader = new TmxMapLoader();
         platformFactory = new PlatformFactory();
+        vanishingTilesFactory = new VanishingTilesFactory();
         player = new Player();
     }
     public static GameWorld getInstance()
@@ -75,6 +81,7 @@ public class GameWorld
         tilesLayer = (TiledMapTileLayer) tiledMap.getLayers().get(TM_TILES_LAYER_NAME);
 
         platforms.clear();
+        vanishingTiles.clear();
 
         //TODO:clear map on level load
         navigationMap = new NavigationMapWrapper(width, height);
@@ -114,6 +121,12 @@ public class GameWorld
                 final Platform platform = platformFactory.createPlatform(tileWidth, tileHeight, objectProperties);
                 navigationMap.setPoint(platform, platform.getX(), platform.getY());
                 platforms.add(platform);
+            }
+            else if (TM_OBJECT_TYPE_VANISHING_TILE.equals(objectType))
+            {
+                final VanishingTile vanishingTile = vanishingTilesFactory.createVanishingTile(tileWidth, tileHeight, objectProperties);
+                navigationMap.setPoint(vanishingTile, vanishingTile.getX(), vanishingTile.getY());
+                vanishingTiles.add(vanishingTile);
             }
         }
 
@@ -212,5 +225,10 @@ public class GameWorld
     public List<Platform> getPlatforms()
     {
         return platforms;
+    }
+
+    public List<VanishingTile> getVanishingTiles()
+    {
+        return vanishingTiles;
     }
 }

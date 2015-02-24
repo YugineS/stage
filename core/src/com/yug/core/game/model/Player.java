@@ -229,12 +229,12 @@ public class Player extends MovableTile implements NavigationMapObserver
             final float newScreenY = getNewScreenY(player.getScreenY(), nextPointScreenY, velocity);
             player.setScreenX(newScreenX);
             player.setScreenY(newScreenY);
-            player.setX(nextX);
-            player.setY(nextY);
             //call onChangePosition
             if (newScreenX == nextPointScreenX && newScreenY == nextPointScreenY)
             {
                 //call onArrivedToPoint
+                player.setX(nextX);
+                player.setY(nextY);
                 player.setNextNavigationPoint(null);
             }
         }
