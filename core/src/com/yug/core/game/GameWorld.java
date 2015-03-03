@@ -40,6 +40,7 @@ public class GameWorld
     public static final String TM_OBJECT_TYPE_PLATFORM = "platform";
     public static final String TM_OBJECT_TYPE_VANISHING_TILE = "vanishingTile";
     public static final String TM_OBJECT_TYPE_PLAYER = "player";
+    public static final String TM_OBJECT_TYPE_TELEPORT = "teleport";
 
     private TmxMapLoader tmLoader;
     private TiledMap tiledMap;
@@ -116,15 +117,19 @@ public class GameWorld
             final String objectType = TiledMapUtils.getStringPropery(TM_OBJECT_TYPE, objectProperties);
             if (TM_OBJECT_TYPE_PLATFORM.equals(objectType))
             {
-                final Platform platform = platformFactory.createPlatform(tileWidth, tileHeight, objectProperties);
+                final Platform platform = platformFactory.create(tileWidth, tileHeight, objectProperties);
                 navigationMap.setPoint(platform, platform.getX(), platform.getY());
                 platforms.add(platform);
             }
             else if (TM_OBJECT_TYPE_VANISHING_TILE.equals(objectType))
             {
-                final VanishingTile vanishingTile = vanishingTilesFactory.createVanishingTile(tileWidth, tileHeight, objectProperties);
+                final VanishingTile vanishingTile = vanishingTilesFactory.create(tileWidth, tileHeight, objectProperties);
                 navigationMap.setPoint(vanishingTile, vanishingTile.getX(), vanishingTile.getY());
                 vanishingTiles.add(vanishingTile);
+            }
+            else if (TM_OBJECT_TYPE_TELEPORT.equals(objectType))
+            {
+
             }
             else if (TM_OBJECT_TYPE_PLAYER.equals(objectType))
             {
