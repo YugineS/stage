@@ -39,6 +39,7 @@ public class GameWorld
 
     public static final String TM_OBJECT_TYPE_PLATFORM = "platform";
     public static final String TM_OBJECT_TYPE_VANISHING_TILE = "vanishingTile";
+    public static final String TM_OBJECT_TYPE_PLAYER = "player";
 
     private TmxMapLoader tmLoader;
     private TiledMap tiledMap;
@@ -57,6 +58,7 @@ public class GameWorld
     private final Player player;
 
     private static GameWorld instance = new GameWorld();
+
     private GameWorld()
     {
         tmLoader = new TmxMapLoader();
@@ -64,6 +66,7 @@ public class GameWorld
         vanishingTilesFactory = new VanishingTilesFactory();
         player = new Player();
     }
+
     public static GameWorld getInstance()
     {
         return instance;
@@ -86,12 +89,7 @@ public class GameWorld
         //TODO:clear map on level load
         navigationMap = new NavigationMapWrapper(width, height);
         loadNavigationMap();
-        player.setX(1);
-        player.setY(1);
-        player.setScreenX(player.getX() * tileWidth);
-        player.setScreenY(player.getY() * tileHeight);
-        player.setWidth(tileWidth);
-        player.setHeight(tileHeight);
+
         navigationMap.addObserver(player);
     }
 
@@ -128,20 +126,39 @@ public class GameWorld
                 navigationMap.setPoint(vanishingTile, vanishingTile.getX(), vanishingTile.getY());
                 vanishingTiles.add(vanishingTile);
             }
+            else if (TM_OBJECT_TYPE_PLAYER.equals(objectType))
+            {
+                initPlayer(TiledMapUtils.getIntProperty(TM_OBJECT_X, objectProperties),
+                        TiledMapUtils.getIntProperty(TM_OBJECT_Y, objectProperties));
+            }
         }
 
+    }
+
+    private void initPlayer(final int x, final int y)
+    {
+        player.setX(x);
+        player.setY(y);
+        player.setScreenX(player.getX() * tileWidth);
+        player.setScreenY(player.getY() * tileHeight);
+        player.setWidth(tileWidth);
+        player.setHeight(tileHeight);
+        player.setState(Player.State.STANDING);
     }
 
     private void loadTiledLayer(final NavigationMapWrapper navigationMap, final TiledMapTileLayer layer)
     {
         final MapProperties layerProperties = layer.getProperties();
         final boolean walkable = TiledMapUtils.getBooleanProperty(TM_WALKABLE, layerProperties);
-        for (int x=0; x<layer.getWidth(); x++)
+        for (int x = 0; x < layer.getWidth(); x++)
         {
-            for(int y=0; y<layer.getHeight(); y++)
+            for (int y = 0; y < layer.getHeight(); y++)
             {
                 final TiledMapTileLayer.Cell cell = layer.getCell(x, y);
-                if (cell == null){continue;}
+                if (cell == null)
+                {
+                    continue;
+                }
                 //get point from the Tiles Pool
                 Tile point = new Tile(x, y);
                 navigationMap.setPoint(point, x, y);
