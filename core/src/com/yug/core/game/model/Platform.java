@@ -184,7 +184,7 @@ public class Platform extends MovableTile
     //creating test texture
     private Texture createTestTexture()
     {
-        final Pixmap pixmap = createTestPixmap(32, 32);
+        final Pixmap pixmap = createTestPixmap(60, 60);
         return new Texture(pixmap);
     }
 

@@ -7,8 +7,8 @@ import com.badlogic.gdx.Gdx;
  */
 public class Constants
 {
-    public static final float GAME_WIDTH = 640;
-    public static final float GAME_HEIGHT = 360;
+    public static final float GAME_WIDTH = 960;
+    public static final float GAME_HEIGHT = 540;
     public static final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
     public static final float SCREEN_WIDTH = Gdx.graphics.getWidth();
     public static final float VIEWPORT_HEIGHT = GAME_HEIGHT;

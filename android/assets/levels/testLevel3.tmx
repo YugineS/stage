@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="16" height="9" tilewidth="60" tileheight="60">
+ <tileset firstgid="1" name="test_tiles" tilewidth="60" tileheight="60">
+  <image source="../img/staget1.png" width="1024" height="64"/>
+  <tile id="3">
+   <properties>
+    <property name="walkable" value="false"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="tiles" width="16" height="9">
+  <properties>
+   <property name="walkable" value="true"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBh6gAuKiVVLiji17McnT4r7aaGfmgAAdAAAbw==
+  </data>
+ </layer>
+ <layer name="walls" width="16" height="9">
+  <properties>
+   <property name="walkable" value="false"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYIAAFgbiADZ1LGRiQuYSaz+19eNzKz3sJ1X/QIY/ANfQAL0=
+  </data>
+ </layer>
+ <objectgroup name="platforms" width="16" height="9">
+  <properties>
+   <property name="walkable" value="true"/>
+  </properties>
+  <object gid="2" x="180" y="180">
+   <properties>
+    <property name="platformType" value="platform"/>
+    <property name="type" value="platform"/>
+    <property name="x" value="3"/>
+    <property name="y" value="6"/>
+   </properties>
+  </object>
+  <object gid="1" x="540" y="360">
+   <properties>
+    <property name="platformType" value="downPlatform"/>
+    <property name="type" value="platform"/>
+    <property name="x" value="9"/>
+    <property name="y" value="3"/>
+   </properties>
+  </object>
+  <object gid="1" x="660" y="240">
+   <properties>
+    <property name="platformType" value="downPlatform"/>
+    <property name="type" value="platform"/>
+    <property name="x" value="11"/>
+    <property name="y" value="5"/>
+   </properties>
+  </object>
+  <object gid="11" x="780" y="240">
+   <properties>
+    <property name="nextX" value="7"/>
+    <property name="nextY" value="5"/>
+    <property name="type" value="teleport"/>
+    <property name="x" value="13"/>
+    <property name="y" value="5"/>
+   </properties>
+  </object>
+  <object gid="11" x="420" y="240">
+   <properties>
+    <property name="nextX" value="13"/>
+    <property name="nextY" value="5"/>
+    <property name="type" value="teleport"/>
+    <property name="x" value="7"/>
+    <property name="y" value="5"/>
+   </properties>
+  </object>
+  <object gid="3" x="900" y="120">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="15"/>
+    <property name="y" value="7"/>
+   </properties>
+  </object>
+  <object gid="3" x="900" y="180">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="15"/>
+    <property name="y" value="6"/>
+   </properties>
+  </object>
+  <object gid="3" x="900" y="240">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="15"/>
+    <property name="y" value="5"/>
+   </properties>
+  </object>
+  <object gid="3" x="900" y="300">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="15"/>
+    <property name="y" value="4"/>
+   </properties>
+  </object>
+  <object gid="3" x="900" y="360">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="15"/>
+    <property name="y" value="3"/>
+   </properties>
+  </object>
+  <object gid="3" x="900" y="420">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="15"/>
+    <property name="y" value="2"/>
+   </properties>
+  </object>
+  <object gid="3" x="900" y="480">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="15"/>
+    <property name="y" value="1"/>
+   </properties>
+  </object>
+  <object gid="3" x="900" y="540">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="15"/>
+    <property name="y" value="0"/>
+   </properties>
+  </object>
+  <object gid="3" x="840" y="540">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="14"/>
+    <property name="y" value="0"/>
+   </properties>
+  </object>
+  <object gid="3" x="780" y="540">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="13"/>
+    <property name="y" value="0"/>
+   </properties>
+  </object>
+  <object gid="3" x="780" y="60">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="13"/>
+    <property name="y" value="8"/>
+   </properties>
+  </object>
+  <object gid="3" x="840" y="60">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="14"/>
+    <property name="y" value="8"/>
+   </properties>
+  </object>
+  <object gid="3" x="900" y="60">
+   <properties>
+    <property name="type" value="vanishingTile"/>
+    <property name="x" value="15"/>
+    <property name="y" value="8"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="objects" width="16" height="9">
+  <object x="480" y="180">
+   <properties>
+    <property name="type" value="player"/>
+    <property name="x" value="8"/>
+    <property name="y" value="5"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

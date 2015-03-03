@@ -5,7 +5,7 @@ package com.yug.core.game;
  */
 public enum LevelName
 {
-    LEVEL_TEST("levels/testLevel.tmx"), LEVEL_1("");
+    LEVEL_TEST("levels/testLevel3.tmx"), LEVEL_1("");
     private String tmxFilePath;
 
     private LevelName(final String tmxFilePath)

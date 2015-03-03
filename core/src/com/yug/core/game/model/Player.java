@@ -179,7 +179,7 @@ public class Player extends MovableTile implements NavigationMapObserver
     //creating test texture
     private Texture createTestTexture()
     {
-        final Pixmap pixmap = createTestPixmap(32, 32);
+        final Pixmap pixmap = createTestPixmap(60, 60);
         return new Texture(pixmap);
     }
 
