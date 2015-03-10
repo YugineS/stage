@@ -8,11 +8,13 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.yug.core.game.helpers.PlatformFactory;
+import com.yug.core.game.helpers.TeleportFactory;
 import com.yug.core.game.helpers.TiledMapUtils;
 import com.yug.core.game.helpers.VanishingTilesFactory;
 import com.yug.core.game.model.NavigationMapWrapper;
 import com.yug.core.game.model.Platform;
 import com.yug.core.game.model.Player;
+import com.yug.core.game.model.Teleport;
 import com.yug.core.game.model.Tile;
 import com.yug.core.game.model.VanishingTile;
 
@@ -53,8 +55,10 @@ public class GameWorld
     private NavigationMapWrapper navigationMap;
     private List<Platform> platforms = new LinkedList<Platform>();
     private List<VanishingTile> vanishingTiles = new LinkedList<VanishingTile>();
+    private List<Teleport> teleports = new LinkedList<Teleport>();
     private final PlatformFactory platformFactory;
     private final VanishingTilesFactory vanishingTilesFactory;
+    private final TeleportFactory teleportFactory = new TeleportFactory();
 
     private final Player player;
 
@@ -129,7 +133,9 @@ public class GameWorld
             }
             else if (TM_OBJECT_TYPE_TELEPORT.equals(objectType))
             {
-
+                final Teleport teleport = teleportFactory.create(tileWidth, tileHeight, objectProperties);
+                navigationMap.setPoint(teleport, teleport.getX(), teleport.getY());
+                teleports.add(teleport);
             }
             else if (TM_OBJECT_TYPE_PLAYER.equals(objectType))
             {
@@ -137,7 +143,28 @@ public class GameWorld
                         TiledMapUtils.getIntProperty(TM_OBJECT_Y, objectProperties));
             }
         }
+        initTeleports(teleports);
+    }
 
+    private void initTeleports(final List<Teleport> teleports)
+    {
+        for (final Teleport teleport : teleports)
+        {
+            final Teleport targetTeleport = findTeleportById(teleport.getTargetId(), teleports);
+            teleport.setTargetTeleport(targetTeleport);
+        }
+    }
+
+    private Teleport findTeleportById(final int id, final List<Teleport> teleports)
+    {
+        for (final Teleport teleport : teleports)
+        {
+            if (id == teleport.getId())
+            {
+                return teleport;
+            }
+        }
+        return null;
     }
 
     private void initPlayer(final int x, final int y)
@@ -252,5 +279,10 @@ public class GameWorld
     public List<VanishingTile> getVanishingTiles()
     {
         return vanishingTiles;
+    }
+
+    public List<Teleport> getTeleports()
+    {
+        return teleports;
     }
 }
