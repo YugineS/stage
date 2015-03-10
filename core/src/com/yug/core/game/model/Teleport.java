@@ -1,5 +1,7 @@
 package com.yug.core.game.model;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.yug.core.game.GameWorld;
 
 /**
@@ -13,6 +15,7 @@ public class Teleport extends Tile
     private int targetId;
     private Teleport targetTeleport;
     private State state = State.WAITING;
+    private Texture texture = createTestTexture();
 
     public void update(final float deltaT)
     {
@@ -58,6 +61,35 @@ public class Teleport extends Tile
     public void setTargetId(final int targetId)
     {
         this.targetId = targetId;
+    }
+
+    public Texture getTexture()
+    {
+        return texture;
+    }
+
+    //creating test texture
+    private Texture createTestTexture()
+    {
+        final Pixmap pixmap = createTestPixmap(60, 60);
+        return new Texture(pixmap);
+    }
+
+    //creating test texture
+    private Pixmap createTestPixmap(final int width, final int height)
+    {
+        final Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        // Fill square with @@@ color at 50% opacity
+        pixmap.setColor(0, 1, 1, .5f);
+        pixmap.fill();
+        // Draw a yellow-colored X shape on square
+        pixmap.setColor(1, 1, 0, 1);
+        pixmap.drawLine(0, 0, width, height);
+        pixmap.drawLine(width, 0, 0, height);
+        // Draw a cyan-colored border around square
+        pixmap.setColor(0, 1, 1, 1);
+        pixmap.drawRectangle(0, 0, width, height);
+        return pixmap;
     }
 
     public enum State
