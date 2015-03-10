@@ -54,8 +54,8 @@
   </object>
   <object gid="11" x="780" y="240">
    <properties>
-    <property name="nextX" value="7"/>
-    <property name="nextY" value="5"/>
+    <property name="id" value="2"/>
+    <property name="targetId" value="1"/>
     <property name="type" value="teleport"/>
     <property name="x" value="13"/>
     <property name="y" value="5"/>
@@ -63,8 +63,8 @@
   </object>
   <object gid="11" x="420" y="240">
    <properties>
-    <property name="nextX" value="13"/>
-    <property name="nextY" value="5"/>
+    <property name="id" value="1"/>
+    <property name="targetId" value="2"/>
     <property name="type" value="teleport"/>
     <property name="x" value="7"/>
     <property name="y" value="5"/>
@@ -163,11 +163,11 @@
   </object>
  </objectgroup>
  <objectgroup name="objects" width="16" height="9">
-  <object x="480" y="180">
+  <object x="780" y="240">
    <properties>
     <property name="type" value="player"/>
-    <property name="x" value="8"/>
-    <property name="y" value="5"/>
+    <property name="x" value="13"/>
+    <property name="y" value="4"/>
    </properties>
   </object>
  </objectgroup>

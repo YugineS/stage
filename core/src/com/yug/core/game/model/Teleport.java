@@ -7,7 +7,11 @@ import com.yug.core.game.GameWorld;
  */
 public class Teleport extends Tile
 {
-    private Teleport nextTeleport;
+    /**teleport unique id*/
+    private int id;
+    /**unique id of the target teleport*/
+    private int targetId;
+    private Teleport targetTeleport;
     private State state = State.WAITING;
 
     public void update(final float deltaT)
@@ -15,14 +19,14 @@ public class Teleport extends Tile
         this.state.getStateHandler().update(this, deltaT);
     }
 
-    public Teleport getNextTeleport()
+    public Teleport getTargetTeleport()
     {
-        return nextTeleport;
+        return targetTeleport;
     }
 
-    public void setNextTeleport(final Teleport nextTeleport)
+    public void setTargetTeleport(final Teleport targetTeleport)
     {
-        this.nextTeleport = nextTeleport;
+        this.targetTeleport = targetTeleport;
     }
 
     public State getState()
@@ -34,6 +38,26 @@ public class Teleport extends Tile
     {
         this.state = state;
         this.state.getStateHandler().enterState(this);
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(final int id)
+    {
+        this.id = id;
+    }
+
+    public int getTargetId()
+    {
+        return targetId;
+    }
+
+    public void setTargetId(final int targetId)
+    {
+        this.targetId = targetId;
     }
 
     public enum State
@@ -88,7 +112,7 @@ public class Teleport extends Tile
         {
             final Player player = GameWorld.getInstance().getPlayer();
             player.setState(Player.State.TELEPORTING);
-            teleport.getNextTeleport().setState(State.RECEIVING);
+            teleport.getTargetTeleport().setState(State.RECEIVING);
         }
 
         @Override
