@@ -12,13 +12,15 @@ import java.util.LinkedList;
  */
 public class Player extends MovableTile implements NavigationMapObserver
 {
-    private final float DEFAULT_SPEED = 96;
+    private final float DEFAULT_SPEED = 120;
     private State state;
     private Texture texture;
     private PathFinder pathFinder;
     private LinkedList<Tile> path;
     private Tile nextNavigationPoint;
     private Direction direction;
+    private int destX = -1;
+    private int destY = -1;
 
     public Player()
     {
@@ -33,11 +35,11 @@ public class Player extends MovableTile implements NavigationMapObserver
     {
         if (State.MOVING.equals(state))
         {
-            if (nextNavigationPoint == null)
+            if (this.nextNavigationPoint == null)
             {
                 if (path != null && path.size() > 0)
                 {
-                    nextNavigationPoint = path.pop();
+                    this.nextNavigationPoint = path.pop();
                     updateDirection();
                     updatePosition(deltaT);
                 }
@@ -68,6 +70,11 @@ public class Player extends MovableTile implements NavigationMapObserver
                 }
             }
         }
+    }
+
+    private void onArriveToPoint()
+    {
+        calculatePath();
     }
 
     private void updateDirection()
@@ -123,18 +130,23 @@ public class Player extends MovableTile implements NavigationMapObserver
     {
         if ((State.MOVING == state || State.STANDING == state) && (getX() != destX || getY() != destY))
         {
-            path = pathFinder.calculatePath(getX(), getY(), destX, destY, GameWorld.getInstance().getNavigationMap());
-
-            if (State.MOVING.equals(this.state) && path != null)
-            {
-                //force updating the nextNavigationPoint
-                //nextNavigationPoint = path.pop();
-                //updateDirection();
-            }
-            else if (State.MOVING != state && path != null && path.size() > 0)
+            this.destX = destX;
+            this.destY = destY;
+            if (State.STANDING == state)
             {
                 this.state = State.MOVING;
+                calculatePath();
             }
+        }
+    }
+
+    private void calculatePath()
+    {
+        if (this.destX > 0 && this.destY > 0)
+        {
+            this.path = pathFinder.calculatePath(getX(), getY(), this.destX, this.destY, GameWorld.getInstance().getNavigationMap());
+            this.destX = -1;
+            this.destY = -1;
         }
     }
 
@@ -249,6 +261,7 @@ public class Player extends MovableTile implements NavigationMapObserver
                 player.setX(nextX);
                 player.setY(nextY);
                 player.setNextNavigationPoint(null);
+                player.onArriveToPoint();
             }
         }
 
