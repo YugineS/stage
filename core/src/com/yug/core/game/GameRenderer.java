@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.yug.core.Constants;
 import com.yug.core.game.model.Platform;
+import com.yug.core.game.model.Teleport;
 import com.yug.core.game.model.VanishingTile;
 
 public class GameRenderer
@@ -48,6 +49,10 @@ public class GameRenderer
         for (final VanishingTile vanishingTile : gameWorld.getVanishingTiles())
         {
             batch.draw(vanishingTile.getTexture(), vanishingTile.getScreenX(), vanishingTile.getScreenY());
+        }
+        for (final Teleport teleport : gameWorld.getTeleports())
+        {
+            batch.draw(teleport.getTexture(), teleport.getScreenX(), teleport.getScreenY());
         }
         batch.draw(gameWorld.getPlayer().getTexture(), gameWorld.getPlayer().getScreenX(), gameWorld.getPlayer().getScreenY());
         batch.end();

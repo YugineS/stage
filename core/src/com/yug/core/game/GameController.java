@@ -3,6 +3,7 @@ package com.yug.core.game;
 import com.yug.core.game.handlers.GameInputHandler;
 import com.yug.core.game.model.Platform;
 import com.yug.core.game.model.Player;
+import com.yug.core.game.model.Teleport;
 import com.yug.core.game.model.Tile;
 import com.yug.core.game.model.VanishingTile;
 
@@ -37,6 +38,10 @@ public class GameController implements GameInputHandler
             {
                 vanishingTilesIterator.remove();
             }
+        }
+        for (final Teleport teleport : gameWorld.getTeleports())
+        {
+            teleport.update(deltaT);
         }
     }
 
