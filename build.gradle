@@ -59,7 +59,7 @@ project(":core") {
 
 
     dependencies {
-	compile "com.yug.pf:pathfinder:0.1"        
+	compile "com.yug.pf:pathfinder:0.2"
 	compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     }
 }
