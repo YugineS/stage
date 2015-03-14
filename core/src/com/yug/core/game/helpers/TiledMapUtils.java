@@ -19,6 +19,6 @@ public class TiledMapUtils
 
     public static int getIntProperty(final String key, final MapProperties properties)
     {
-        return Integer.valueOf(getStringPropery(key, properties));
+        return Integer.parseInt(getStringPropery(key, properties));
     }
 }
