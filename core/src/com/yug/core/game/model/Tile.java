@@ -20,6 +20,26 @@ public class Tile extends NavigationPoint
     private float height;
     private NavigationMapWrapper navigationMap;
 
+    @Override
+    public void setWalkable(final boolean walkable)
+    {
+        super.setWalkable(walkable);
+        if (navigationMap != null)
+        {
+            navigationMap.notifyObservers();
+        }
+    }
+
+    @Override
+    public void setWalkingResistance(final float walkingResistance)
+    {
+        super.setWalkingResistance(walkingResistance);
+        if (navigationMap != null)
+        {
+            navigationMap.notifyObservers();
+        }
+    }
+
     public float getWidth()
     {
         return width;
