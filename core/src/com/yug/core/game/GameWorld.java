@@ -7,10 +7,14 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.yug.core.game.helpers.KeyTilesFactory;
+import com.yug.core.game.helpers.LockedTilesFactory;
 import com.yug.core.game.helpers.PlatformFactory;
 import com.yug.core.game.helpers.TeleportFactory;
 import com.yug.core.game.helpers.TiledMapUtils;
 import com.yug.core.game.helpers.VanishingTilesFactory;
+import com.yug.core.game.model.KeyTile;
+import com.yug.core.game.model.LockedTile;
 import com.yug.core.game.model.NavigationMapWrapper;
 import com.yug.core.game.model.Platform;
 import com.yug.core.game.model.Player;
@@ -18,6 +22,7 @@ import com.yug.core.game.model.Teleport;
 import com.yug.core.game.model.Tile;
 import com.yug.core.game.model.VanishingTile;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,6 +48,8 @@ public class GameWorld
     public static final String TM_OBJECT_TYPE_VANISHING_TILE = "vanishingTile";
     public static final String TM_OBJECT_TYPE_PLAYER = "player";
     public static final String TM_OBJECT_TYPE_TELEPORT = "teleport";
+    public static final String TM_OBJECT_TYPE_LOCK = "lock";
+    public static final String TM_OBJECT_TYPE_KEY = "key";
 
     private TmxMapLoader tmLoader;
     private TiledMap tiledMap;
@@ -53,12 +60,16 @@ public class GameWorld
     private float tileWidth;
     private float tileHeight;
     private NavigationMapWrapper navigationMap;
-    private List<Platform> platforms = new LinkedList<Platform>();
+    private List<Platform> platforms = new ArrayList<Platform>();
     private List<VanishingTile> vanishingTiles = new LinkedList<VanishingTile>();
-    private List<Teleport> teleports = new LinkedList<Teleport>();
+    private List<Teleport> teleports = new ArrayList<Teleport>();
+    private List<LockedTile> locks = new ArrayList<LockedTile>();
+    private List<KeyTile> keys = new ArrayList<KeyTile>();
     private final PlatformFactory platformFactory;
     private final VanishingTilesFactory vanishingTilesFactory;
     private final TeleportFactory teleportFactory = new TeleportFactory();
+    private final LockedTilesFactory lockedTilesFactory = new LockedTilesFactory();
+    private final KeyTilesFactory keyTilesFactory = new KeyTilesFactory();
 
     private final Player player;
 
@@ -90,6 +101,9 @@ public class GameWorld
 
         platforms.clear();
         vanishingTiles.clear();
+        teleports.clear();
+        locks.clear();
+        keys.clear();
 
         //TODO:clear map on level load
         navigationMap = new NavigationMapWrapper(width, height);
@@ -142,6 +156,18 @@ public class GameWorld
                 initPlayer(TiledMapUtils.getIntProperty(TM_OBJECT_X, objectProperties),
                         TiledMapUtils.getIntProperty(TM_OBJECT_Y, objectProperties));
             }
+            else if (TM_OBJECT_TYPE_LOCK.equals(objectType))
+            {
+                final LockedTile lockedTile = lockedTilesFactory.create(tileWidth, tileHeight, objectProperties);
+                navigationMap.setPoint(lockedTile, lockedTile.getX(), lockedTile.getY());
+                locks.add(lockedTile);
+            }
+            else if (TM_OBJECT_TYPE_KEY.equals(objectType))
+            {
+                final KeyTile keyTile = keyTilesFactory.create(tileWidth, tileHeight, objectProperties);
+                navigationMap.setPoint(keyTile, keyTile.getX(), keyTile.getY());
+                keys.add(keyTile);
+            }
         }
         initTeleports(teleports);
     }
@@ -192,12 +218,15 @@ public class GameWorld
                     continue;
                 }
                 //get point from the Tiles Pool
-                Tile point = new Tile(x, y);
-                navigationMap.setPoint(point, x, y);
-                point.setWidth(tileWidth);
-                point.setHeight(tileHeight);
-                point.setWalkable(walkable);
-                //TODO:create animated tiles here
+                if (navigationMap.getPoint(x, y) == null)
+                {
+                    Tile point = new Tile(x, y);
+                    navigationMap.setPoint(point, x, y);
+                    point.setWidth(tileWidth);
+                    point.setHeight(tileHeight);
+                    point.setWalkable(walkable);
+                    //TODO:create animated tiles here
+                }
             }
         }
     }
@@ -284,5 +313,15 @@ public class GameWorld
     public List<Teleport> getTeleports()
     {
         return teleports;
+    }
+
+    public List<KeyTile> getKeys()
+    {
+        return keys;
+    }
+
+    public List<LockedTile> getLocks()
+    {
+        return locks;
     }
 }

@@ -28,44 +28,39 @@
   <properties>
    <property name="walkable" value="true"/>
   </properties>
-  <object gid="2" x="180" y="180">
+  <object type="platform" gid="2" x="180" y="180">
    <properties>
     <property name="platformType" value="platform"/>
-    <property name="type" value="platform"/>
     <property name="x" value="3"/>
     <property name="y" value="6"/>
    </properties>
   </object>
-  <object gid="1" x="540" y="360">
+  <object type="platform" gid="1" x="540" y="360">
    <properties>
     <property name="platformType" value="downPlatform"/>
-    <property name="type" value="platform"/>
     <property name="x" value="9"/>
     <property name="y" value="3"/>
    </properties>
   </object>
-  <object gid="1" x="660" y="240">
+  <object type="platform" gid="1" x="660" y="240">
    <properties>
     <property name="platformType" value="downPlatform"/>
-    <property name="type" value="platform"/>
     <property name="x" value="11"/>
     <property name="y" value="5"/>
    </properties>
   </object>
-  <object gid="11" x="780" y="240">
+  <object type="teleport" gid="11" x="780" y="240">
    <properties>
     <property name="id" value="2"/>
     <property name="targetId" value="1"/>
-    <property name="type" value="teleport"/>
     <property name="x" value="13"/>
     <property name="y" value="5"/>
    </properties>
   </object>
-  <object gid="11" x="420" y="240">
+  <object type="teleport" gid="11" x="420" y="240">
    <properties>
     <property name="id" value="1"/>
     <property name="targetId" value="2"/>
-    <property name="type" value="teleport"/>
     <property name="x" value="7"/>
     <property name="y" value="5"/>
    </properties>
@@ -163,11 +158,38 @@
   </object>
  </objectgroup>
  <objectgroup name="objects" width="16" height="9">
-  <object x="780" y="240">
+  <object name="Player" type="player" x="780" y="240" width="60" height="60">
    <properties>
-    <property name="type" value="player"/>
     <property name="x" value="13"/>
     <property name="y" value="4"/>
+   </properties>
+  </object>
+  <object name="LockedTile" type="lock" x="840" y="300" width="60" height="60">
+   <properties>
+    <property name="keyId" value="1"/>
+    <property name="x" value="14"/>
+    <property name="y" value="3"/>
+   </properties>
+  </object>
+  <object name="key" type="key" x="480" y="180" width="60" height="60">
+   <properties>
+    <property name="id" value="1"/>
+    <property name="x" value="8"/>
+    <property name="y" value="5"/>
+   </properties>
+  </object>
+  <object name="LockedTile" type="lock" x="780" y="300" width="60" height="60">
+   <properties>
+    <property name="keyId" value="1"/>
+    <property name="x" value="13"/>
+    <property name="y" value="3"/>
+   </properties>
+  </object>
+  <object name="key" type="key" x="780" y="120" width="60" height="60">
+   <properties>
+    <property name="id" value="1"/>
+    <property name="x" value="13"/>
+    <property name="y" value="6"/>
    </properties>
   </object>
  </objectgroup>

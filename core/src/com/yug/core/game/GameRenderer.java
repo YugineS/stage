@@ -3,9 +3,12 @@ package com.yug.core.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.yug.core.Constants;
+import com.yug.core.game.model.KeyTile;
+import com.yug.core.game.model.LockedTile;
 import com.yug.core.game.model.Platform;
 import com.yug.core.game.model.Teleport;
 import com.yug.core.game.model.VanishingTile;
@@ -53,6 +56,22 @@ public class GameRenderer
         for (final Teleport teleport : gameWorld.getTeleports())
         {
             batch.draw(teleport.getTexture(), teleport.getScreenX(), teleport.getScreenY());
+        }
+        for (final KeyTile keyTile : gameWorld.getKeys())
+        {
+            final Texture keyTileTexture = keyTile.getTexture();
+            if (keyTileTexture != null)
+            {
+                batch.draw(keyTileTexture, keyTile.getScreenX(), keyTile.getScreenY());
+            }
+        }
+        for (final LockedTile lockedTile : gameWorld.getLocks())
+        {
+            final Texture lockedTileTexture = lockedTile.getTexture();
+            if (lockedTileTexture != null)
+            {
+                batch.draw(lockedTileTexture, lockedTile.getScreenX(), lockedTile.getScreenY());
+            }
         }
         batch.draw(gameWorld.getPlayer().getTexture(), gameWorld.getPlayer().getScreenX(), gameWorld.getPlayer().getScreenY());
         batch.end();

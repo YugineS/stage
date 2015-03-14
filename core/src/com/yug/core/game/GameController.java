@@ -1,6 +1,8 @@
 package com.yug.core.game;
 
 import com.yug.core.game.handlers.GameInputHandler;
+import com.yug.core.game.model.KeyTile;
+import com.yug.core.game.model.LockedTile;
 import com.yug.core.game.model.Platform;
 import com.yug.core.game.model.Player;
 import com.yug.core.game.model.Teleport;
@@ -42,6 +44,14 @@ public class GameController implements GameInputHandler
         for (final Teleport teleport : gameWorld.getTeleports())
         {
             teleport.update(deltaT);
+        }
+        for (final KeyTile keyTile : gameWorld.getKeys())
+        {
+            keyTile.update(deltaT);
+        }
+        for (final LockedTile lockedTile : gameWorld.getLocks())
+        {
+            lockedTile.update(deltaT);
         }
     }
 
